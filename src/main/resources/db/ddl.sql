@@ -31,7 +31,6 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE orderproducts(
-	id TEXT PRIMARY KEY,
 	order_id TEXT NOT NULL,
 	product_id TEXT NOT NULL,
 	quantity INTEGER NOT NULL,
