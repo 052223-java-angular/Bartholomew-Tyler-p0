@@ -27,7 +27,7 @@ CREATE TABLE orders (
 	id TEXT PRIMARY KEY,
 	user_id TEXT NOT NULL,
 	amount DECIMAL NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
