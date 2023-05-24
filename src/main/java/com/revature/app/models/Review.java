@@ -1,6 +1,5 @@
 package com.revature.app.models;
 
-import java.util.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +12,10 @@ import lombok.ToString;
 @Setter
 @ToString
 
-
-public class Orders {
+public class Review {
     private String id;
+    private int rating;
+    private String comment;
     private String user_id;
-    private Currency amount;
-    private String payment_method_id;
+    private String product_id;
 }
