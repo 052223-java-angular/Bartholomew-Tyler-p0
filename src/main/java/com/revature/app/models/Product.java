@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 
-public class Products {
+public class Product {
     private String id;
     private String name;
     private String category;

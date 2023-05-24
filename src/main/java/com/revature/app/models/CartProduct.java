@@ -13,10 +13,9 @@ import lombok.ToString;
 @ToString
 
 
-
-public class OrderProducts {
+public class CartProduct {
     private String id;
-    private String order_id;
+    private String user_id;
     private String product_id;
     private int quantity;
 }

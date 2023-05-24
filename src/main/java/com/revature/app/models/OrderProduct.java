@@ -1,6 +1,5 @@
 package com.revature.app.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,11 @@ import lombok.ToString;
 @Setter
 @ToString
 
-public class PaymentMethods {
+
+
+public class OrderProduct {
     private String id;
-    private String number;
-    private String cvc;
-    private String user_id;
+    private String order_id;
+    private String product_id;
+    private int quantity;
 }
