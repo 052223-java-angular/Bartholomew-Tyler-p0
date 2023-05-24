@@ -18,12 +18,19 @@ public class HomeScreen implements IScreen {
             while (true) {
                 clearScreen();
                 System.out.println("Welcome!");
+                System.out.println("To exit any screen at any point, enter x");
+                System.out.println("[1] Register");
                 System.out.println("[x] Exit");
 
                 System.out.print("\nEnter: ");
                 input = scanner.nextLine();
 
                 switch (input.toLowerCase()) {
+
+                    case "1":
+                        clearScreen();
+                        router.navigate("/register", scanner);
+                        break;
                     case "x":
                         System.out.println("\nGoodbye!");
                         break exit;

@@ -1,5 +1,7 @@
 package com.revature.app.models;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +19,10 @@ public class User {
     private String id;
     private String username;
     private String password;
+
+    public User (String username, String password) {
+        this.id = UUID.randomUUID().toString();
+        this.username = username;
+        this.password = password;
+    }
 }
