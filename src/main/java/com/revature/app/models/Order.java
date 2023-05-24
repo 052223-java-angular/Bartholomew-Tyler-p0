@@ -1,5 +1,6 @@
 package com.revature.app.models;
 
+import java.util.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,9 @@ import lombok.ToString;
 @ToString
 
 
-public class CartProducts {
+public class Order {
     private String id;
     private String user_id;
-    private String product_id;
-    private int quantity;
+    private Currency amount;
+    private String payment_method_id;
 }
