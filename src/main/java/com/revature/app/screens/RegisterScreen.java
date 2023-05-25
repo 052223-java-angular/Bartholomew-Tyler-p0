@@ -5,6 +5,9 @@ import java.util.Scanner;
 import java.util.Set;
 
 import com.revature.app.models.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revature.app.services.RouterService;
 import com.revature.app.services.UserService;
 
@@ -17,6 +20,7 @@ public class RegisterScreen implements IScreen {
     private final RouterService routerService;
     private final UserService userService;
     private final Validator validator;
+    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
 
     @Override
     public void start(Scanner scan) {
@@ -25,16 +29,19 @@ public class RegisterScreen implements IScreen {
 
         exit: {
             while (true) {
+                logger.info("Beginnning registration");
                 clearScreen();
                 System.out.println("Register here!");
 
                 username = getUsername(scan);
                 if (username.equals("x")) {
+                    logger.info("Leaving registration screen");
                     break exit;
                 }
 
                 password = getPassword(scan);
                 if (password.equals("x")) {
+                    logger.info("Leaving registration screen");
                     break exit;
                 }
 
@@ -101,6 +108,7 @@ public class RegisterScreen implements IScreen {
             confirmPassword = scan.nextLine();
 
             if (!password.equals(confirmPassword)) {
+                logger.warn("Not matching passwords!");
                 clearScreen();
                 System.out.print("\nPasswords do not match!");
                 continue;
