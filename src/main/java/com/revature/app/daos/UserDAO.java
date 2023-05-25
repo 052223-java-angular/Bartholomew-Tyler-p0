@@ -45,10 +45,25 @@ public class UserDAO implements CrudDAO<User> {
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 
-    @Override
-    public User findById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    public User loginByUsernameAndPassword(String username, String password) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, obj.getId());
+                ps.setString(2, obj.getUsername());
+                ps.setString(3, obj.getPassword());
+ 
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

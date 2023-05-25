@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.revature.app.daos.UserDAO;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
+import com.revature.app.screens.LoginScreen;
 
 import lombok.AllArgsConstructor;
 
@@ -17,6 +18,9 @@ public class RouterService {
                 break;
             case "/register":
                 new RegisterScreen(this, getUserService()).start(scanner);
+                break;
+            case "/login":
+                new LoginScreen(this, getUserService()).start(scanner);
                 break;
             default:
                 break;

@@ -32,8 +32,8 @@ public class RegisterScreen implements IScreen {
                 break exit;
             }
             password = getPassword(scan);
+                if (password.equals("x")) {
                 logger.info("Leaving registration screen");
-            if (password.equals("x")) {
                 break exit;
             }
             

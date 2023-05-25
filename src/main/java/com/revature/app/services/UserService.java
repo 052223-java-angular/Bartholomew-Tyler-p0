@@ -20,4 +20,8 @@ public class UserService {
         userDAO.save(newUser);
         return newUser;
     }
+
+    public User login(String username, String password) {
+        userDAO.
+    }
 }
