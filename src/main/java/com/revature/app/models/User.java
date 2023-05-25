@@ -16,7 +16,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
 public class User {
     @NotNull
     private String id;

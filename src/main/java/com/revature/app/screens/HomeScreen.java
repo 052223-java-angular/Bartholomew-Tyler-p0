@@ -26,6 +26,7 @@ public class HomeScreen implements IScreen {
                 System.out.println("Welcome!");
                 System.out.println("To exit any screen at any point, enter x");
                 System.out.println("[1] Register");
+                System.out.println("[2] Login");
                 System.out.println("[x] Exit");
 
                 System.out.print("\nEnter: ");
@@ -37,6 +38,11 @@ public class HomeScreen implements IScreen {
                         logger.info("Navigating to register screen");
                         clearScreen();
                         router.navigate("/register", scanner);
+                        break;
+                    case "2":
+                        logger.info("Navigating to login screen");
+                        clearScreen();
+                        router.navigate("/login", scanner);
                         break;
                     case "x":
                         logger.info("Exiting");

@@ -51,8 +51,38 @@ public class UserDAO implements CrudDAO<User> {
 
     @Override
     public User findById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+    
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = "SELECT * FROM users WHERE username = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, username);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Create a new User object and populate it with data from the result set
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password"));
+                        return Optional.of(user);
+                    }
+                  return Optional.empty();
+                }
+ 
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override

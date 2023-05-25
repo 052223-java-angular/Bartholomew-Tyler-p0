@@ -26,4 +26,19 @@ public class UserService {
 
         return userOpt.isEmpty();
     }
+
+    public Optional<User> login(String username, String password) {
+        
+        Optional<User> user = userDAO.findByUsername(username);
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+        boolean isMatching = BCrypt.checkpw(password, user.get().getPassword());
+        if (isMatching) {
+            return user;
+        }
+        else {
+            return Optional.empty();
+        }
+    }
 }

@@ -14,6 +14,7 @@ import com.revature.app.services.UserService;
 import javax.validation.Validator;
 import javax.validation.ConstraintViolation;
 import lombok.AllArgsConstructor;
+import com.revature.app.utils.Session;
 
 @AllArgsConstructor
 public class RegisterScreen implements IScreen {
@@ -21,6 +22,7 @@ public class RegisterScreen implements IScreen {
     private final UserService userService;
     private final Validator validator;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
+    private Session session;
 
     @Override
     public void start(Scanner scan) {
@@ -46,8 +48,9 @@ public class RegisterScreen implements IScreen {
                 }
 
                 clearScreen();
-                userService.register(username, password);
-                // routerService.navigate("/home", scan);
+                User user = userService.register(username, password);
+                session.setSession(user);
+                routerService.navigate("/menu", scan);
                 break exit;
             }
         }
