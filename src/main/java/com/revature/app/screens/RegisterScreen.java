@@ -2,6 +2,9 @@ package com.revature.app.screens;
 
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revature.app.services.RouterService;
 import com.revature.app.services.UserService;
 
@@ -10,6 +13,8 @@ import lombok.AllArgsConstructor;
 public class RegisterScreen implements IScreen {
     private final RouterService routerService;
     private final UserService userService;
+    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
+    
     @Override
     public void start(Scanner scan) {
        String input = "";
@@ -18,13 +23,16 @@ public class RegisterScreen implements IScreen {
 
        exit : {
         while(true) {
+            logger.info("Beginnning registration");
             clearScreen();
             System.out.println("Register here!");
             username = getUsername(scan);
             if (username.equals("x")) {
+                logger.info("Leaving registration screen");
                 break exit;
             }
             password = getPassword(scan);
+                logger.info("Leaving registration screen");
             if (password.equals("x")) {
                 break exit;
             }
@@ -60,6 +68,7 @@ public class RegisterScreen implements IScreen {
             System.out.print("\nPlease confirm your password:");
             confirmPassword = scan.nextLine();
             if (!password.equals(confirmPassword)) {
+                logger.warn("Not matching passwords!");
                 clearScreen();
                 System.out.print("\nPasswords do not match!");
                 continue;
