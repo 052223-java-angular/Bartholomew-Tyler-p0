@@ -20,4 +20,10 @@ public class UserService {
         userDAO.save(newUser);
         return newUser;
     }
+
+    public boolean isUniqueUsername(String username) {
+        Optional<User> userOpt = userDAO.findByUsername(username);
+
+        return userOpt.isEmpty();
+    }
 }

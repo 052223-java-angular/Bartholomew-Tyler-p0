@@ -25,18 +25,12 @@ public class RegisterScreen implements IScreen {
 
         exit: {
             while (true) {
-                User user = new User("", "");
                 clearScreen();
                 System.out.println("Register here!");
-                user.setUsername(getUsername(scan));
+
+                username = getUsername(scan);
                 if (username.equals("x")) {
                     break exit;
-                }
-
-                Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
-
-                for (Iterator<ConstraintViolation<User>> i = constraintViolations.iterator(); i.hasNext();) {
-                    System.out.println(i.next().getMessage());
                 }
 
                 password = getPassword(scan);
@@ -57,11 +51,29 @@ public class RegisterScreen implements IScreen {
         while (true) {
             System.out.print("\nEnter a username: ");
             username = scan.nextLine();
-            break;
-        }
 
-        if (username.equalsIgnoreCase("x")) {
-            return "x";
+            if (username.equalsIgnoreCase("x")) {
+                return "x";
+            }
+
+            Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User(username, ""),
+                    "username");
+
+            if (constraintViolations.size() > 0) {
+                clearScreen();
+                for (Iterator<ConstraintViolation<User>> i = constraintViolations.iterator(); i.hasNext();) {
+                    System.out.println(i.next().getMessage());
+                }
+                continue;
+            }
+
+            if (!userService.isUniqueUsername(username)) {
+                clearScreen();
+                System.out.println("Username is not unique!");
+                continue;
+            }
+
+            break;
         }
 
         return username;
@@ -73,18 +85,27 @@ public class RegisterScreen implements IScreen {
         while (true) {
             System.out.print("\nEnter a password: ");
             password = scan.nextLine();
+
+            Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User("", password),
+                    "password");
+
+            if (constraintViolations.size() > 0) {
+                clearScreen();
+                for (Iterator<ConstraintViolation<User>> i = constraintViolations.iterator(); i.hasNext();) {
+                    System.out.println(i.next().getMessage());
+                }
+                continue;
+            }
+
             System.out.print("\nPlease confirm your password: ");
             confirmPassword = scan.nextLine();
+
             if (!password.equals(confirmPassword)) {
                 clearScreen();
                 System.out.print("\nPasswords do not match!");
                 continue;
             }
             break;
-        }
-
-        if (password.equalsIgnoreCase("x")) {
-            return "x";
         }
 
         return password;
