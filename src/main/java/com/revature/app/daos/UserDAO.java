@@ -54,26 +54,36 @@ public class UserDAO implements CrudDAO<User> {
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
     
-    // public User loginByUsernameAndPassword(String username, String password) {
-    //     try (Connection conn = ConnectionFactory.getInstance().getConnection()){
-    //         String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";
-    //         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-    //             ps.setString(1, obj.getId());
-    //             ps.setString(2, obj.getUsername());
-    //             ps.setString(3, obj.getPassword());
- 
-    //         }
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = "SELECT * FROM users WHERE username = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, username);
 
-    //     } catch (SQLException e) {
-    //         throw new RuntimeException("Unable to connect to db");
-    //     } catch (IOException e) {
-    //         throw new RuntimeException("Cannot find application.properties");
-    //     } catch (ClassNotFoundException e) {
-    //         throw new RuntimeException("Unable to load jdbc");
-    //     } catch (Exception e) {
-    //         throw new RuntimeException(e.getMessage());
-    //     }
-    // }
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Create a new User object and populate it with data from the result set
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password"));
+                        return Optional.of(user);
+                    }
+                  return Optional.empty();
+                }
+ 
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
     @Override
     public List<User> findAll() {
