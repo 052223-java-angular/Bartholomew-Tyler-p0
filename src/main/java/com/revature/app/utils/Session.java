@@ -14,7 +14,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Session {
-    // 1, 2, 3, 4...... 10000
     private String id;
     private String username;
     
