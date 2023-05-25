@@ -9,7 +9,7 @@ import com.revature.app.daos.UserDAO;
 import com.revature.app.models.User;
 
 import lombok.AllArgsConstructor;
- 
+
 @AllArgsConstructor
 public class UserService {
     private final UserDAO userDAO;

@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS orderproducts CASCADE;
 DROP TABLE IF EXISTS reviews CASCADE;
-DROP TABLE IF EXISTS paymentmethods CASCADE;
+DROP TABLE IF EXISTS carts CASCADE;
 DROP TABLE IF EXISTS cartproducts CASCADE;
 
 CREATE TABLE users (
@@ -25,23 +25,12 @@ CREATE TABLE products (
     price DECIMAL NOT NULL
 );
 
-CREATE TABLE paymentmethods (
-	id TEXT PRIMARY KEY,
-	number TEXT NOT NULL,
-	expiration_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-	cvc TEXT NOT NULL,
-	user_id TEXT NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
 CREATE TABLE orders (
 	id TEXT PRIMARY KEY,
 	user_id TEXT NOT NULL,
 	amount DECIMAL NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    payment_method_id text not null,
-	FOREIGN KEY (user_id) REFERENCES users(id),
-	foreign key (payment_method_id) references paymentmethods(id)
+	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE orderproducts(
@@ -63,12 +52,18 @@ CREATE TABLE reviews (
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
 
+CREATE TABLE carts (
+	id TEXT PRIMARY KEY,
+	user_id TEXT NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE cartproducts (
 	id TEXT primary key,
-	user_id TEXT NOT NULL,
+	cart_id TEXT NOT NULL,
 	product_id TEXT NOT NULL,
 	quantity INTEGER NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES orders(id),
+	FOREIGN KEY (cart_id) REFERENCES carts(id),
 	FOREIGN KEY (product_id) REFERENCES products(id)
 );
 	
