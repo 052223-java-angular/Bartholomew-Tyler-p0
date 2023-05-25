@@ -39,7 +39,7 @@ public class LoginScreen implements IScreen{
                         break exit;
                     }
                     clearScreen();
-                    userService.login(username, password);
+                    // userService.login(username, password);
                     routerService.navigate("/home", scan);
                 }
             }

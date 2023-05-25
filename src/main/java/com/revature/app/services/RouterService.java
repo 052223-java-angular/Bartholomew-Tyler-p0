@@ -8,8 +8,11 @@ import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.LoginScreen;
 
 import lombok.AllArgsConstructor;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
-@AllArgsConstructor
+// @AllArgsConstructor
 public class RouterService {
     public void navigate(String path, Scanner scanner) {
         switch (path) {
@@ -17,7 +20,7 @@ public class RouterService {
                 new HomeScreen(this).start(scanner);
                 break;
             case "/register":
-                new RegisterScreen(this, getUserService()).start(scanner);
+                new RegisterScreen(this, getUserService(), getValidator()).start(scanner);
                 break;
             case "/login":
                 new LoginScreen(this, getUserService()).start(scanner);
@@ -29,5 +32,10 @@ public class RouterService {
 
     private UserService getUserService() {
         return new UserService(new UserDAO());
+    }
+
+    private Validator getValidator() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        return factory.getValidator();
     }
 }
