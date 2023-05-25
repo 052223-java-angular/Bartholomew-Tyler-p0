@@ -1,59 +1,86 @@
 package com.revature.app.screens;
 
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 
+import com.revature.app.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.revature.app.services.RouterService;
 import com.revature.app.services.UserService;
 
+import javax.validation.Validator;
+import javax.validation.ConstraintViolation;
 import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
 public class RegisterScreen implements IScreen {
     private final RouterService routerService;
     private final UserService userService;
+    private final Validator validator;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
-    
+
     @Override
     public void start(Scanner scan) {
-       String input = "";
-       String username = "";
-       String password = "";
+        String username = "";
+        String password = "";
 
-       exit : {
-        while(true) {
-            logger.info("Beginnning registration");
-            clearScreen();
-            System.out.println("Register here!");
-            username = getUsername(scan);
-            if (username.equals("x")) {
-                logger.info("Leaving registration screen");
+        exit: {
+            while (true) {
+                logger.info("Beginnning registration");
+                clearScreen();
+                System.out.println("Register here!");
+
+                username = getUsername(scan);
+                if (username.equals("x")) {
+                    logger.info("Leaving registration screen");
+                    break exit;
+                }
+
+                password = getPassword(scan);
+                if (password.equals("x")) {
+                    logger.info("Leaving registration screen");
+                    break exit;
+                }
+
+                clearScreen();
+                userService.register(username, password);
+                // routerService.navigate("/home", scan);
                 break exit;
             }
-            password = getPassword(scan);
-                logger.info("Leaving registration screen");
-            if (password.equals("x")) {
-                break exit;
-            }
-            
-            clearScreen();
-            userService.register(username, password);
-            routerService.navigate("/home", scan);
         }
-       }
     }
-    
+
     public String getUsername(Scanner scan) {
         String username = "";
         while (true) {
-            System.out.print("\nEnter a username:");
+            System.out.print("\nEnter a username: ");
             username = scan.nextLine();
-            break;
-        }
 
-        if (username.equalsIgnoreCase("x")) {
-            return "x";
+            if (username.equalsIgnoreCase("x")) {
+                return "x";
+            }
+
+            Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User(username, ""),
+                    "username");
+
+            if (constraintViolations.size() > 0) {
+                clearScreen();
+                for (Iterator<ConstraintViolation<User>> i = constraintViolations.iterator(); i.hasNext();) {
+                    System.out.println(i.next().getMessage());
+                }
+                continue;
+            }
+
+            if (!userService.isUniqueUsername(username)) {
+                clearScreen();
+                System.out.println("Username is not unique!");
+                continue;
+            }
+
+            break;
         }
 
         return username;
@@ -63,10 +90,23 @@ public class RegisterScreen implements IScreen {
         String password = "";
         String confirmPassword = "";
         while (true) {
-            System.out.print("\nEnter a password:");
+            System.out.print("\nEnter a password: ");
             password = scan.nextLine();
-            System.out.print("\nPlease confirm your password:");
+
+            Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User("", password),
+                    "password");
+
+            if (constraintViolations.size() > 0) {
+                clearScreen();
+                for (Iterator<ConstraintViolation<User>> i = constraintViolations.iterator(); i.hasNext();) {
+                    System.out.println(i.next().getMessage());
+                }
+                continue;
+            }
+
+            System.out.print("\nPlease confirm your password: ");
             confirmPassword = scan.nextLine();
+
             if (!password.equals(confirmPassword)) {
                 logger.warn("Not matching passwords!");
                 clearScreen();
@@ -74,10 +114,6 @@ public class RegisterScreen implements IScreen {
                 continue;
             }
             break;
-        }
-
-        if (password.equalsIgnoreCase("x")) {
-            return "x";
         }
 
         return password;

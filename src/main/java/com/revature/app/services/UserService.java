@@ -9,7 +9,7 @@ import com.revature.app.daos.UserDAO;
 import com.revature.app.models.User;
 
 import lombok.AllArgsConstructor;
- 
+
 @AllArgsConstructor
 public class UserService {
     private final UserDAO userDAO;
@@ -19,5 +19,11 @@ public class UserService {
         User newUser = new User(username, hashed);
         userDAO.save(newUser);
         return newUser;
+    }
+
+    public boolean isUniqueUsername(String username) {
+        Optional<User> userOpt = userDAO.findByUsername(username);
+
+        return userOpt.isEmpty();
     }
 }
