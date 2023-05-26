@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.revature.app.services.RouterService;
+import com.revature.app.utils.Session;
 
 import lombok.AllArgsConstructor;
 
@@ -13,16 +14,21 @@ import lombok.AllArgsConstructor;
 public class HomeScreen implements IScreen {
     private final RouterService router;
     private static final Logger logger = LogManager.getLogger(HomeScreen.class);
-
+    private Session session;
 
     @Override
     public void start(Scanner scanner) {
         String input = "";
         logger.info("Navigated to home screen");
-        
+
         exit: {
             while (true) {
                 clearScreen();
+
+                if (!session.getId().isBlank()) {
+                    router.navigate("/menu", scanner);
+                }
+
                 System.out.println("Welcome!");
                 System.out.println("To exit any screen at any point, enter x");
                 System.out.println("[1] Register");
