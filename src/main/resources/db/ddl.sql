@@ -22,7 +22,8 @@ CREATE TABLE products (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     category TEXT NOT NULL,
-    price DECIMAL NOT NULL
+    price DECIMAL NOT NULL,
+	description TEXT NOT NULL
 );
 
 CREATE TABLE orders (
