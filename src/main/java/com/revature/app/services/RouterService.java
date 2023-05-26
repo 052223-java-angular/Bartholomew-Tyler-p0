@@ -17,11 +17,11 @@ import com.revature.app.utils.Session;
 @AllArgsConstructor
 public class RouterService {
     private Session session;
-    
+
     public void navigate(String path, Scanner scanner) {
         switch (path) {
             case "/home":
-                new HomeScreen(this).start(scanner);
+                new HomeScreen(this, session).start(scanner);
                 break;
             case "/register":
                 new RegisterScreen(this, getUserService(), getValidator(), session).start(scanner);
@@ -45,6 +45,5 @@ public class RouterService {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
     }
-
 
 }
