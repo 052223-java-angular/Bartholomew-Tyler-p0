@@ -3,8 +3,10 @@ package com.revature.app.services;
 import java.util.Scanner;
 
 import com.revature.app.daos.UserDAO;
+import com.revature.app.screens.BrowsingScreen;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
+import com.revature.app.screens.SearchingScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
 
@@ -31,6 +33,12 @@ public class RouterService {
                 break;
             case "/menu":
                 new MenuScreen(session).start(scanner);
+                break;
+            case "/browseproducts":
+                new BrowsingScreen(session).start(scanner);
+                break;
+            case "/searchproducts":
+                new SearchingScreen(session).start(scanner);
                 break;
             default:
                 break;

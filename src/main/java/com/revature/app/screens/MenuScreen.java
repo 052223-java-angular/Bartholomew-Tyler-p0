@@ -2,11 +2,12 @@ package com.revature.app.screens;
 
 import java.util.Scanner;
 
+import com.revature.app.services.RouterService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.revature.app.utils.Session;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import lombok.AllArgsConstructor;
 
 /**
@@ -18,39 +19,60 @@ public class MenuScreen implements IScreen {
     private Session session;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
 
-    @Override
-    public void start(Scanner scanner) {
-        String input;
-        String error = "";
+    private RouterService router;
 
-        exit: {
+    /**
+     * Constructs a new MenuScreen with the specified Session.
+     *
+     * @param session the Session containing user information
+     */
+    public MenuScreen(Session session) {
+        this.session = session;
+    }
+
+    @Override
+    public void start(Scanner scan) {
+        String input = "";
+        String error = "";
+                exit: {
             while (true) {
                 clearScreen();
                 System.out.println("Welcome to the menu screen, " + session.getUsername() + "!");
+                
                 if (!error.isBlank()) {
                     System.out.println(error);
                 }
-                System.out.println("\n[x] Logout");
+                System.out.println("Press x to logout and go back to the login screen");
+                System.out.println("[1] Browse All Products");
+                System.out.println("[2] Search for Products");
 
                 System.out.print("\nEnter: ");
                 input = scanner.nextLine();
 
-                switch (input.toLowerCase()) {
-                    case "x":
-                        logger.info("Exiting MenuScreen");
-                        error = "";
-                        System.out.println("\nGoodbye!");
-                        session.clearSession();
-                        break exit;
-                    default:
-                        logger.warn("Invalid input on MenuScreen!");
-                        error = "Invalid option!";
-                        break;
-                }
+          switch(input.toLowerCase()) {
+            case "1":
+                logger.info("Browsing products");
+                clearScreen();
+                router.navigate("/browseproducts", scan);
+                break;
+            case "2":
+                logger.info("Navigating to login screen");
+                clearScreen();
+                router.navigate("/searchproducts", scan);
+                break;
+            case "x":
+                 logger.info("Exiting MenuScreen");
+                 error = "";
+                 System.out.println("\nGoodbye!");
+                 session.clearSession();
+                 break exit;
+            default:
+                 logger.warn("Invalid input on MenuScreen!");
+                 error = "Invalid option!";
+                 break;
             }
         }
     }
-
     /*
      * ------------------------ Helper methods ------------------------------
      */
