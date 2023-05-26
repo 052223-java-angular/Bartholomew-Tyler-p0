@@ -20,7 +20,7 @@ CREATE TABLE users (
 
 CREATE TABLE products (
     id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     category TEXT NOT NULL,
     price DECIMAL NOT NULL,
 	description TEXT NOT NULL
