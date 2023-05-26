@@ -34,11 +34,11 @@ public class MenuScreen implements IScreen {
     public void start(Scanner scan) {
         String input = "";
         String error = "";
-                exit: {
+        exit: {
             while (true) {
                 clearScreen();
                 System.out.println("Welcome to the menu screen, " + session.getUsername() + "!");
-                
+
                 if (!error.isBlank()) {
                     System.out.println(error);
                 }
@@ -47,29 +47,30 @@ public class MenuScreen implements IScreen {
                 System.out.println("[2] Search for Products");
 
                 System.out.print("\nEnter: ");
-                input = scanner.nextLine();
+                input = scan.nextLine();
 
-          switch(input.toLowerCase()) {
-            case "1":
-                logger.info("Browsing products");
-                clearScreen();
-                router.navigate("/browseproducts", scan);
-                break;
-            case "2":
-                logger.info("Navigating to login screen");
-                clearScreen();
-                router.navigate("/searchproducts", scan);
-                break;
-            case "x":
-                 logger.info("Exiting MenuScreen");
-                 error = "";
-                 System.out.println("\nGoodbye!");
-                 session.clearSession();
-                 break exit;
-            default:
-                 logger.warn("Invalid input on MenuScreen!");
-                 error = "Invalid option!";
-                 break;
+                switch (input.toLowerCase()) {
+                    case "1":
+                        logger.info("Browsing products");
+                        clearScreen();
+                        router.navigate("/browseproducts", scan);
+                        break;
+                    case "2":
+                        logger.info("Navigating to login screen");
+                        clearScreen();
+                        router.navigate("/searchproducts", scan);
+                        break;
+                    case "x":
+                        logger.info("Exiting MenuScreen");
+                        error = "";
+                        System.out.println("\nGoodbye!");
+                        session.clearSession();
+                        break exit;
+                    default:
+                        logger.warn("Invalid input on MenuScreen!");
+                        error = "Invalid option!";
+                        break;
+                }
             }
         }
     }
