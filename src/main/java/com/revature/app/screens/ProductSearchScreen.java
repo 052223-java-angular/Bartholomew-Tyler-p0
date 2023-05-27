@@ -1,5 +1,6 @@
 package com.revature.app.screens;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
@@ -35,21 +36,25 @@ public class ProductSearchScreen implements IScreen {
                 }
 
                 System.out.println("\nChooose a search option below:");
-                System.out.println("[1] by name");
-                System.out.println("[2] by category");
-                System.out.println("[3] by price range");
+                System.out.println("[1] by name 🔤");
+                System.out.println("[2] by category 📁");
+                System.out.println("[3] by price range 💰");
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
 
                 switch (input.toLowerCase()) {
                     case "1":
-                        logger.info("Searching products by name");
+                        logger.info("Search products by name");
                         searchProductsByName(scan);
                         break;
                     case "2":
                         logger.info("Search products by category");
                         searchProductsByCategory(scan);
+                        break;
+                    case "3":
+                        logger.info("Search products by price range");
+                        searchProductsByPriceRange(scan);
                         break;
                     case "x":
                         logger.info("Exiting ProductSearchScreen");
@@ -67,12 +72,13 @@ public class ProductSearchScreen implements IScreen {
     }
 
     public void searchProductsByName(Scanner scan) {
-        String input = "";
         String searchString = "";
         String message = "";
 
         while (true) {
             clearScreen();
+
+            System.out.println("Product Name 🔤 Search\n");
             if (!message.isEmpty()) {
                 System.out.println(message);
             }
@@ -106,7 +112,7 @@ public class ProductSearchScreen implements IScreen {
         while (true) {
             clearScreen();
 
-            System.out.println("Product Category Search");
+            System.out.println("Product Category 📁 Search");
             if (!message.isEmpty()) {
                 System.out.println(message);
             }
@@ -145,8 +151,91 @@ public class ProductSearchScreen implements IScreen {
             String category = categories.get((int) inputDouble - 1);
             List<Product> products = productService.findProductsByCategory(category);
             printProducts(products);
+            chooseProduct(scan, products);
+        }
+    }
+
+    public void searchProductsByPriceRange(Scanner scan) {
+        String message = "";
+        String lowerLimit = "";
+        String upperLimit = "";
+
+        while (true) {
+            clearScreen();
+
+            System.out.println("Product Price Range 💰 Search");
+            if (!message.isEmpty()) {
+                System.out.println(message);
+            }
+
+            System.out.print("\nEnter lower limit (x to go back): ");
+
+            lowerLimit = getPriceString(scan);
+
+            if (lowerLimit.equalsIgnoreCase("x")) {
+                break;
+            }
+
+            System.out.print("Enter upper limit (x to go back): ");
+
+            upperLimit = getPriceString(scan);
+
+            if (upperLimit.equalsIgnoreCase("x")) {
+                break;
+            }
+
+            Double lowerLimitDouble = Double.parseDouble(lowerLimit);
+            Double upperLimitDouble = Double.parseDouble(upperLimit);
+
+            if (lowerLimitDouble > upperLimitDouble) {
+                message = "Upper limit must be greater than lower limit!";
+                continue;
+            }
+
+            List<Product> products = productService.findProductsByPriceRange(lowerLimitDouble, upperLimitDouble);
+            if (products.size() > 0) {
+                printProducts(products);
+            } else {
+                message = "No results found";
+                continue;
+            }
 
             chooseProduct(scan, products);
+        }
+    }
+
+    private String getPriceString(Scanner scan) {
+        String input = "";
+        String message = "";
+
+        while (true) {
+            if (!message.isEmpty()) {
+                System.out.println(message);
+            }
+
+            input = scan.nextLine();
+            if (input.equalsIgnoreCase("x")) {
+                return "x";
+            }
+
+            if (!StringHelper.isNumeric(input)) {
+                message = "Invalid input!";
+                continue;
+            }
+
+            double inputDouble = Double.parseDouble(input);
+
+            if (inputDouble < 0) {
+                message = "Price cannot be negative!";
+                continue;
+            }
+
+            if (input.length() > 15) {
+                message = "Price is too large!";
+                continue;
+            }
+
+            return input;
         }
     }
 

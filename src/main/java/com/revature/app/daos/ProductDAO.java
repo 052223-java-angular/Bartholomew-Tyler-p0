@@ -31,9 +31,7 @@ public class ProductDAO {
                                 rs.getString("description")));
                     }
                 }
-
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
         } catch (IOException e) {
@@ -58,7 +56,6 @@ public class ProductDAO {
                         categories.add(rs.getString("category"));
                     }
                 }
-
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
@@ -92,9 +89,40 @@ public class ProductDAO {
                                 rs.getString("description")));
                     }
                 }
-
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
+        return products;
+    }
+
+    public List<Product> findByPriceRange(double lowerLimit, double upperLimit) {
+        List<Product> products = new ArrayList<Product>();
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = "SELECT * FROM products WHERE price BETWEEN ? and ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setDouble(1, lowerLimit);
+                ps.setDouble(2, upperLimit);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        // Create a new User object and populate it with data from the result set
+                        products.add(new Product(
+                                rs.getString("id"),
+                                rs.getString("name"),
+                                rs.getString("category"),
+                                rs.getBigDecimal("price"),
+                                rs.getString("description")));
+                    }
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
         } catch (IOException e) {

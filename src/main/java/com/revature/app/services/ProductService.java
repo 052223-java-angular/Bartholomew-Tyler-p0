@@ -22,4 +22,8 @@ public class ProductService {
     public List<Product> findProductsByCategory(String category) {
         return productDAO.findByCategory(category);
     }
+
+    public List<Product> findProductsByPriceRange(double lowerLimit, double upperLimit) {
+        return productDAO.findByPriceRange(lowerLimit, upperLimit);
+    }
 }
