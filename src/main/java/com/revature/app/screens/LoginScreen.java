@@ -14,17 +14,22 @@ import lombok.AllArgsConstructor;
 public class LoginScreen implements IScreen {
     private final RouterService routerService;
     private final UserService userService;
-    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
+    private static final Logger logger = LogManager.getLogger(LoginScreen.class);
     private Session session;
 
     @Override
     public void start(Scanner scan) {
-        String input = "";
         String username = "";
         String password = "";
 
         exit: {
             while (true) {
+
+                if (!session.getId().isBlank()) {
+                    routerService.navigate("/menu", scan);
+                    break exit;
+                }
+
                 logger.info("Beginning login!");
                 clearScreen();
                 System.out.println("Login here!");

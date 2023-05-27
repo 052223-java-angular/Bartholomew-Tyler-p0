@@ -8,9 +8,9 @@ import com.revature.app.models.Product;
 import com.revature.app.screens.BrowsingScreen;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
-import com.revature.app.screens.SearchingScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
+import com.revature.app.screens.ProductSearchScreen;
 
 import lombok.AllArgsConstructor;
 import javax.validation.Validation;
@@ -39,8 +39,8 @@ public class RouterService {
             case "/browseproducts":
                 new BrowsingScreen(this, getProductService(), session).start(scanner);
                 break;
-            case "/searchproducts":
-                new SearchingScreen(session).start(scanner);
+            case "/productsearch":
+                new ProductSearchScreen(this, getProductService(), session).start(scanner);
                 break;
             default:
                 break;
@@ -51,13 +51,13 @@ public class RouterService {
         return new UserService(new UserDAO());
     }
 
-    private ProductService getProductService() {
-        return new ProductService(new ProductDAO());
-    }
-
     private Validator getValidator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
+    }
+
+    private ProductService getProductService() {
+        return new ProductService(new ProductDAO());
     }
 
 }

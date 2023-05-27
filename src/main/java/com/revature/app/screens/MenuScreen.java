@@ -6,8 +6,6 @@ import com.revature.app.services.RouterService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.revature.app.utils.Session;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import lombok.AllArgsConstructor;
 
 /**
@@ -18,9 +16,7 @@ import lombok.AllArgsConstructor;
 public class MenuScreen implements IScreen {
     private RouterService routerService;
     private Session session;
-    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
-
-    
+    private static final Logger logger = LogManager.getLogger(MenuScreen.class);
 
     /**
      * Constructs a new MenuScreen with the specified Session.
@@ -44,7 +40,7 @@ public class MenuScreen implements IScreen {
                     System.out.println(error);
                 }
                 System.out.println("Press x to logout and go back to the login screen");
-                System.out.println("[1] Browse All Products");
+                System.out.println("\n[1] Browse All Products");
                 System.out.println("[2] Search for Products");
 
                 System.out.print("\nEnter: ");
@@ -57,10 +53,9 @@ public class MenuScreen implements IScreen {
                         routerService.navigate("/browseproducts", scan);
                         break;
                     case "2":
-                        logger.info("Navigating to login screen");
-                        clearScreen();
-                        routerService.navigate("/searchproducts", scan);
-                        break;
+                        logger.info("Navigating to Product Search screen");
+                        routerService.navigate("/productsearch", scan);
+                        break exit;
                     case "x":
                         logger.info("Exiting MenuScreen");
                         error = "";
