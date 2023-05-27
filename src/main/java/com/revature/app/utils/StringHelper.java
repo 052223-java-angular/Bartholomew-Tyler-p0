@@ -9,4 +9,8 @@ public class StringHelper {
             return false;
         }
     }
+
+    public static boolean isInteger(double d) {
+        return Math.floor(d) == d;
+    }
 }

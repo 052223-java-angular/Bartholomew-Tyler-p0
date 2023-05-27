@@ -22,7 +22,7 @@ public class ProductSearchScreen implements IScreen {
 
     @Override
     public void start(Scanner scan) {
-        String error = "";
+        String message = "";
         String input = "";
 
         exit: {
@@ -30,8 +30,8 @@ public class ProductSearchScreen implements IScreen {
                 clearScreen();
                 System.out.println("Product Search (press x to go back at any time)");
 
-                if (!error.isBlank()) {
-                    System.out.println(error);
+                if (!message.isBlank()) {
+                    System.out.println(message);
                 }
 
                 System.out.println("\nChooose a search option below:");
@@ -47,15 +47,19 @@ public class ProductSearchScreen implements IScreen {
                         logger.info("Searching products by name");
                         searchProductsByName(scan);
                         break;
+                    case "2":
+                        logger.info("Search products by category");
+                        searchProductsByCategory(scan);
+                        break;
                     case "x":
                         logger.info("Exiting ProductSearchScreen");
-                        error = "";
+                        message = "";
                         clearScreen();
                         routerService.navigate("/menu", scan);
                         break exit;
                     default:
                         logger.warn("Invalid input on ProductSearchScreen!");
-                        error = "Invalid option!";
+                        message = "Invalid option!";
                         break;
                 }
             }
@@ -65,12 +69,12 @@ public class ProductSearchScreen implements IScreen {
     public void searchProductsByName(Scanner scan) {
         String input = "";
         String searchString = "";
-        String error = "";
+        String message = "";
 
         while (true) {
             clearScreen();
-            if (!error.isEmpty()) {
-                System.out.println(error);
+            if (!message.isEmpty()) {
+                System.out.println(message);
             }
 
             System.out.print("Enter a search term (x to go back): ");
@@ -82,41 +86,67 @@ public class ProductSearchScreen implements IScreen {
             }
 
             List<Product> products = productService.findProductsByName(searchString);
-
             if (products.size() > 0) {
-                System.out.println("\nResults:");
-                for (int i = 0; i < products.size(); i++) {
-                    Product product = products.get(i);
-                    System.out.printf("%5s %22s %15s %9.2f\n", "[" + (i + 1) + "]", product.getName(),
-                            product.getCategory(),
-                            product.getPrice());
-                }
-                System.out.print("\nChoose a product (x to go back): ");
+                printProducts(products);
             } else {
-                error = "No results found";
+                message = "No results found";
                 continue;
             }
 
+            chooseProduct(scan, products);
+        }
+    }
+
+    public void searchProductsByCategory(Scanner scan) {
+        String message = "";
+        String input = "";
+
+        List<String> categories = productService.findAllProductCategories();
+
+        while (true) {
+            clearScreen();
+
+            System.out.println("Product Category Search");
+            if (!message.isEmpty()) {
+                System.out.println(message);
+            }
+
+            System.out.println();
+
+            for (int i = 0; i < categories.size(); i++) {
+                System.out.println("[" + (i + 1) + "]" + " " + categories.get(i));
+            }
+
+            System.out.print("\nEnter a category (x to go back): ");
+
             input = scan.nextLine();
 
-            if (input.toLowerCase().equals("x")) {
+            if (input.equalsIgnoreCase("x")) {
                 break;
             }
 
-            while (true) {
-                if (StringHelper.isNumeric(input)) {
-                    // set variable in session, navigate to product screen
-                } else {
-                    switch (input.toLowerCase()) {
-                        case "x":
-                            break;
-                        default:
-                            logger.warn("Invalid input on MenuScreen!");
-                            error = "Invalid option!";
-                            continue;
-                    }
-                }
+            if (!StringHelper.isNumeric(input)) {
+                message = "Invalid option!";
+                continue;
             }
+
+            double inputDouble = Double.parseDouble(input);
+
+            if (!StringHelper.isInteger(inputDouble)) {
+                message = "Invalid option!";
+                continue;
+            }
+
+            if (inputDouble > categories.size() || inputDouble < 1) {
+                message = "Invalid option!";
+                continue;
+            }
+
+            String category = categories.get((int) inputDouble - 1);
+            List<Product> products = productService.findProductsByCategory(category);
+            printProducts(products);
+
+            chooseProduct(scan, products);
         }
     }
 
@@ -125,4 +155,49 @@ public class ProductSearchScreen implements IScreen {
         System.out.flush();
     }
 
+    private void printProducts(List<Product> products) {
+        System.out.println("\nResults:");
+        System.out.printf("%5s %40s %15s %10s\n", "", "Name", "Category", "Price");
+        System.out.println("--------------------------------------------------------------------------");
+        for (int i = 0; i < products.size(); i++) {
+            Product product = products.get(i);
+            System.out.printf("%5s %40s %15s %10.2f\n", "[" + (i + 1) + "]", product.getName(),
+                    product.getCategory(),
+                    product.getPrice());
+        }
+    }
+
+    private void chooseProduct(Scanner scan, List<Product> products) {
+        String input = "";
+        while (true) {
+            System.out.print("\nChoose a product (x to go back): ");
+            input = scan.nextLine();
+
+            if (StringHelper.isNumeric(input)) {
+                double inputDouble = Double.parseDouble(input);
+
+                if (!StringHelper.isInteger(inputDouble)) {
+                    System.out.println("Invalid option!");
+                    continue;
+                }
+
+                if (inputDouble > products.size() || inputDouble < 1) {
+                    System.out.println("Invalid option!");
+                    continue;
+                }
+
+                Product product = products.get((int) (inputDouble - 1));
+                System.out.println(product.getId());
+                // set product id in session, navigate to product screen
+            } else {
+                if (input.equalsIgnoreCase("x")) {
+                    break;
+                } else {
+                    logger.warn("Invalid input on Product Search Screen!");
+                    System.out.println("Invalid option!");
+                    continue;
+                }
+            }
+        }
+    }
 }

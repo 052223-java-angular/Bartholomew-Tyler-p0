@@ -40,7 +40,7 @@ public class MenuScreen implements IScreen {
                     System.out.println(error);
                 }
                 System.out.println("Press x to logout and go back to the login screen");
-                System.out.println("[1] Browse All Products");
+                System.out.println("\n[1] Browse All Products");
                 System.out.println("[2] Search for Products");
 
                 System.out.print("\nEnter: ");

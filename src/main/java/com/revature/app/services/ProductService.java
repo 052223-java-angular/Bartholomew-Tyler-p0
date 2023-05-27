@@ -14,4 +14,12 @@ public class ProductService {
     public List<Product> findProductsByName(String name) {
         return productDAO.findByName(name);
     }
+
+    public List<String> findAllProductCategories() {
+        return productDAO.findAllProductCategories();
+    }
+
+    public List<Product> findProductsByCategory(String category) {
+        return productDAO.findByCategory(category);
+    }
 }
