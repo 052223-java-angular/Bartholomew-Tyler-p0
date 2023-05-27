@@ -290,6 +290,7 @@ public class ProductSearchScreen implements IScreen {
                 Product product = products.get((int) (inputDouble - 1));
                 System.out.println(product.getId());
                 session.setSessionProduct(product);
+                routerService.navigate("/product", scan);
             } else {
                 if (input.equalsIgnoreCase("x")) {
                     return "x";

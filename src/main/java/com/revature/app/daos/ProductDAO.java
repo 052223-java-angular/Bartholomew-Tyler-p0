@@ -32,7 +32,30 @@ public class ProductDAO implements CrudDAO<Product> {
 
     @Override
     public Product findById(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
+            String sql = "select * from products where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()) {
+                Product product = new Product
+                (rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("category"),
+                rs.getBigDecimal("price"),
+                rs.getString("description"));
+                return product;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
     }
 
     @Override
@@ -43,7 +66,8 @@ public class ProductDAO implements CrudDAO<Product> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                Product product = new Product(rs.getString("id"),
+                Product product = new Product
+                        (rs.getString("id"),
                         rs.getString("name"),
                         rs.getString("category"),
                         rs.getBigDecimal("price"),

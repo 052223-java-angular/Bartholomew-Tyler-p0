@@ -30,4 +30,8 @@ public class ProductService {
     public List<Product> findProductsByPriceRange(double lowerLimit, double upperLimit) {
         return productDAO.findByPriceRange(lowerLimit, upperLimit);
     }
+
+    public Product findProductById(String id) {
+        return productDAO.findById(id);
+    }
 }
