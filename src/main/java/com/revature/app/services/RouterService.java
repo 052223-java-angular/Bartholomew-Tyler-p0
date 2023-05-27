@@ -6,9 +6,9 @@ import com.revature.app.daos.UserDAO;
 import com.revature.app.screens.BrowsingScreen;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
-import com.revature.app.screens.SearchingScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
+import com.revature.app.screens.ProductSearchScreen;
 
 import lombok.AllArgsConstructor;
 import javax.validation.Validation;
@@ -32,13 +32,13 @@ public class RouterService {
                 new LoginScreen(this, getUserService(), session).start(scanner);
                 break;
             case "/menu":
-                new MenuScreen(session).start(scanner);
+                new MenuScreen(this, session).start(scanner);
                 break;
             case "/browseproducts":
                 new BrowsingScreen(session).start(scanner);
                 break;
-            case "/searchproducts":
-                new SearchingScreen(session).start(scanner);
+            case "/productsearch":
+                new ProductSearchScreen(this, session).start(scanner);
                 break;
             default:
                 break;
