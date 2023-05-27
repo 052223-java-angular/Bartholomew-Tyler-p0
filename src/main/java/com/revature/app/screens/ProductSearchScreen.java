@@ -160,79 +160,83 @@ public class ProductSearchScreen implements IScreen {
         String lowerLimit = "";
         String upperLimit = "";
 
-        while (true) {
-            clearScreen();
+        exit: {
+            while (true) {
+                clearScreen();
 
-            System.out.println("Product Price Range 💰 Search");
-            if (!message.isEmpty()) {
-                System.out.println(message);
+                System.out.println("Product Price Range 💰 Search");
+                if (!message.isEmpty()) {
+                    System.out.println(message);
+                }
+
+                while (!StringHelper.isNumeric(lowerLimit)) {
+                    System.out.print("\nEnter lower limit (x to go back): ");
+
+                    lowerLimit = getPriceString(scan);
+
+                    if (lowerLimit.equalsIgnoreCase("x")) {
+                        break exit;
+                    }
+                }
+
+                while (!StringHelper.isNumeric(upperLimit)) {
+                    System.out.print("Enter upper limit (x to go back): ");
+
+                    upperLimit = getPriceString(scan);
+
+                    if (upperLimit.equalsIgnoreCase("x")) {
+                        break exit;
+                    }
+                }
+
+                Double lowerLimitDouble = Double.parseDouble(lowerLimit);
+                Double upperLimitDouble = Double.parseDouble(upperLimit);
+
+                if (lowerLimitDouble > upperLimitDouble) {
+                    message = "Upper limit must be greater than lower limit!";
+                    continue;
+                }
+
+                List<Product> products = productService.findProductsByPriceRange(lowerLimitDouble, upperLimitDouble);
+                if (products.size() > 0) {
+                    printProducts(products);
+                } else {
+                    message = "No results found";
+                    continue;
+                }
+
+                String input = chooseProduct(scan, products);
+                if (input.equalsIgnoreCase("x")) {
+                    break exit;
+                }
             }
-
-            System.out.print("\nEnter lower limit (x to go back): ");
-
-            lowerLimit = getPriceString(scan);
-
-            if (lowerLimit.equalsIgnoreCase("x")) {
-                break;
-            }
-
-            System.out.print("Enter upper limit (x to go back): ");
-
-            upperLimit = getPriceString(scan);
-
-            if (upperLimit.equalsIgnoreCase("x")) {
-                break;
-            }
-
-            Double lowerLimitDouble = Double.parseDouble(lowerLimit);
-            Double upperLimitDouble = Double.parseDouble(upperLimit);
-
-            if (lowerLimitDouble > upperLimitDouble) {
-                message = "Upper limit must be greater than lower limit!";
-                continue;
-            }
-
-            List<Product> products = productService.findProductsByPriceRange(lowerLimitDouble, upperLimitDouble);
-            if (products.size() > 0) {
-                printProducts(products);
-            } else {
-                message = "No results found";
-                continue;
-            }
-
-            chooseProduct(scan, products);
         }
     }
 
     private String getPriceString(Scanner scan) {
         String input = "";
-        String message = "";
 
         while (true) {
-            if (!message.isEmpty()) {
-                System.out.println(message);
-            }
-
             input = scan.nextLine();
             if (input.equalsIgnoreCase("x")) {
                 return "x";
             }
 
             if (!StringHelper.isNumeric(input)) {
-                message = "Invalid input!";
-                continue;
+                System.out.println("Invalid input!");
+                return "";
             }
 
             double inputDouble = Double.parseDouble(input);
 
             if (inputDouble < 0) {
-                message = "Price cannot be negative!";
-                continue;
+                System.out.println("Price cannot be negative!");
+                return "";
             }
 
             if (input.length() > 15) {
-                message = "Price is too large!";
-                continue;
+                System.out.println("Price is too large!");
+                return "";
             }
 
             return input;
@@ -256,7 +260,7 @@ public class ProductSearchScreen implements IScreen {
         }
     }
 
-    private void chooseProduct(Scanner scan, List<Product> products) {
+    private String chooseProduct(Scanner scan, List<Product> products) {
         String input = "";
         while (true) {
             System.out.print("\nChoose a product (x to go back): ");
@@ -277,10 +281,11 @@ public class ProductSearchScreen implements IScreen {
 
                 Product product = products.get((int) (inputDouble - 1));
                 System.out.println(product.getId());
+                return product.getId();
                 // set product id in session, navigate to product screen
             } else {
                 if (input.equalsIgnoreCase("x")) {
-                    break;
+                    return "x";
                 } else {
                     logger.warn("Invalid input on Product Search Screen!");
                     System.out.println("Invalid option!");
