@@ -16,10 +16,11 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class MenuScreen implements IScreen {
+    private RouterService routerService;
     private Session session;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
 
-    private RouterService router;
+    
 
     /**
      * Constructs a new MenuScreen with the specified Session.
@@ -53,12 +54,12 @@ public class MenuScreen implements IScreen {
                     case "1":
                         logger.info("Browsing products");
                         clearScreen();
-                        router.navigate("/browseproducts", scan);
+                        routerService.navigate("/browseproducts", scan);
                         break;
                     case "2":
                         logger.info("Navigating to login screen");
                         clearScreen();
-                        router.navigate("/searchproducts", scan);
+                        routerService.navigate("/searchproducts", scan);
                         break;
                     case "x":
                         logger.info("Exiting MenuScreen");

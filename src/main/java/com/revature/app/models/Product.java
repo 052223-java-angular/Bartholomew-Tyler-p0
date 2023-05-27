@@ -1,6 +1,6 @@
 package com.revature.app.models;
 
-import java.util.Currency;
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +13,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
 public class Product {
     private String id;
     private String name;
     private String category;
-    private Currency price; 
+    private BigDecimal price;
+    private String description; 
 }
