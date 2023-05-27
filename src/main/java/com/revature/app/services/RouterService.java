@@ -10,6 +10,7 @@ import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
+import com.revature.app.screens.ProductScreen;
 import com.revature.app.screens.ProductSearchScreen;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +42,9 @@ public class RouterService {
                 break;
             case "/productsearch":
                 new ProductSearchScreen(this, getProductService(), session).start(scanner);
+                break;
+            case "/product":
+                new ProductScreen(this, getProductService(), session).start(scanner);
                 break;
             default:
                 break;

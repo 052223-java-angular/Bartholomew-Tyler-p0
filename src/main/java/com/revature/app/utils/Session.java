@@ -32,4 +32,8 @@ public class Session {
         this.id = "";
         this.username = "";
     }
+
+    public void clearProductSession() {
+        this.productId = "";
+    }
 }
