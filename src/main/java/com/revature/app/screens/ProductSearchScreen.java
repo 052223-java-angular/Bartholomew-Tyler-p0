@@ -46,15 +46,15 @@ public class ProductSearchScreen implements IScreen {
                 switch (input.toLowerCase()) {
                     case "1":
                         logger.info("Search products by name");
-                        searchProductsByName(scan);
+                        searchProductsByName(scan, session);
                         break;
                     case "2":
                         logger.info("Search products by category");
-                        searchProductsByCategory(scan);
+                        searchProductsByCategory(scan, session);
                         break;
                     case "3":
                         logger.info("Search products by price range");
-                        searchProductsByPriceRange(scan);
+                        searchProductsByPriceRange(scan, session);
                         break;
                     case "x":
                         logger.info("Exiting ProductSearchScreen");
@@ -71,7 +71,7 @@ public class ProductSearchScreen implements IScreen {
         }
     }
 
-    public void searchProductsByName(Scanner scan) {
+    public void searchProductsByName(Scanner scan, Session session) {
         String searchString = "";
         String message = "";
 
@@ -99,11 +99,11 @@ public class ProductSearchScreen implements IScreen {
                 continue;
             }
 
-            chooseProduct(scan, products);
+            chooseProduct(scan, products, session);
         }
     }
 
-    public void searchProductsByCategory(Scanner scan) {
+    public void searchProductsByCategory(Scanner scan, Session session) {
         String message = "";
         String input = "";
 
@@ -151,11 +151,11 @@ public class ProductSearchScreen implements IScreen {
             String category = categories.get((int) inputDouble - 1);
             List<Product> products = productService.findProductsByCategory(category);
             printProducts(products);
-            chooseProduct(scan, products);
+            chooseProduct(scan, products, session);
         }
     }
 
-    public void searchProductsByPriceRange(Scanner scan) {
+    public void searchProductsByPriceRange(Scanner scan, Session session) {
         String message = "";
         String lowerLimit = "";
         String upperLimit = "";
@@ -207,7 +207,7 @@ public class ProductSearchScreen implements IScreen {
                     continue;
                 }
 
-                String input = chooseProduct(scan, products);
+                String input = chooseProduct(scan, products, session);
                 if (input.equalsIgnoreCase("x")) {
                     break exit;
                 }
@@ -262,7 +262,7 @@ public class ProductSearchScreen implements IScreen {
         }
     }
 
-    private String chooseProduct(Scanner scan, List<Product> products) {
+    private String chooseProduct(Scanner scan, List<Product> products, Session session) {
         String input = "";
         while (true) {
             System.out.print("\nChoose a product (x to go back): ");
@@ -283,8 +283,7 @@ public class ProductSearchScreen implements IScreen {
 
                 Product product = products.get((int) (inputDouble - 1));
                 System.out.println(product.getId());
-                return product.getId();
-                // set product id in session, navigate to product screen
+                session.setSessionProduct(product);
             } else {
                 if (input.equalsIgnoreCase("x")) {
                     return "x";
