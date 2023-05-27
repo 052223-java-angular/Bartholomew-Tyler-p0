@@ -2,6 +2,7 @@ package com.revature.app.services;
 
 import java.util.Scanner;
 
+import com.revature.app.daos.ProductDAO;
 import com.revature.app.daos.UserDAO;
 import com.revature.app.screens.BrowsingScreen;
 import com.revature.app.screens.HomeScreen;
@@ -38,7 +39,7 @@ public class RouterService {
                 new BrowsingScreen(session).start(scanner);
                 break;
             case "/productsearch":
-                new ProductSearchScreen(this, session).start(scanner);
+                new ProductSearchScreen(this, getProductService(), session).start(scanner);
                 break;
             default:
                 break;
@@ -52,6 +53,10 @@ public class RouterService {
     private Validator getValidator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
+    }
+
+    private ProductService getProductService() {
+        return new ProductService(new ProductDAO());
     }
 
 }
