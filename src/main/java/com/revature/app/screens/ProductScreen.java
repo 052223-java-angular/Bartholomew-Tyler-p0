@@ -16,27 +16,24 @@ public class ProductScreen implements IScreen {
     @Override
     public void start(Scanner scan) {
         String input = "";
-        exit: {
-            while (true) {
-                if (session.getProductId().isEmpty()) {
-                    break;
-                }
-                clearScreen();
-                Product product = productService.findProductById(session.getProductId());
-                System.out.println("------------------- PRODUCT DETAILS --------------------");
-                System.out.println("Name: " + product.getName());
-                System.out.println("Category: " + product.getCategory());
-                System.out.println("Price: $" + product.getPrice());
-                System.out.println("Description:");
-                wrapAndDisplay(product.getDescription());
-                System.out.println("\n------------------------------------------------------");
-                System.out.println("[R] Leave a review of this product - [A] To Add it to your cart");
-                input = scan.nextLine();
-                if (input.equalsIgnoreCase("x")) {
-                    session.clearProductSession();
-                    routerService.navigate("/menu", scan);
-                    break exit;
-                }
+        while (true) {
+            if (session.getProductId().isEmpty()) {
+                break;
+            }
+            clearScreen();
+            Product product = productService.findProductById(session.getProductId());
+            System.out.println("------------------- PRODUCT DETAILS --------------------");
+            System.out.println("Name: " + product.getName());
+            System.out.println("Category: " + product.getCategory());
+            System.out.println("Price: $" + product.getPrice());
+            System.out.println("Description:");
+            wrapAndDisplay(product.getDescription());
+            System.out.println("\n------------------------------------------------------");
+            System.out.println("[R] Leave a review of this product - [A] To Add it to your cart");
+            input = scan.nextLine();
+            if (input.equalsIgnoreCase("x")) {
+                session.clearProductSession();
+                break;
             }
         }
     }
