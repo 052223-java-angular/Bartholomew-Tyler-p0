@@ -51,10 +51,6 @@ public class RouterService {
         return new UserService(new UserDAO());
     }
 
-    private ProductService getProductService() {
-        return new ProductService(new ProductDAO());
-    }
-
     private Validator getValidator() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         return factory.getValidator();
