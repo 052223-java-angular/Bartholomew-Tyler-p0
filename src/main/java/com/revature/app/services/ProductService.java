@@ -11,6 +11,10 @@ import lombok.AllArgsConstructor;
 public class ProductService {
     private final ProductDAO productDAO;
 
+    public List<Product> findAllProducts() {
+        return productDAO.findAll();
+    }
+
     public List<Product> findProductsByName(String name) {
         return productDAO.findByName(name);
     }

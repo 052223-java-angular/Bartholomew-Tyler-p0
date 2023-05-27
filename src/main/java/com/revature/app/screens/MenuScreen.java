@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class MenuScreen implements IScreen {
-    private RouterService router;
+    private RouterService routerService;
     private Session session;
     private static final Logger logger = LogManager.getLogger(MenuScreen.class);
 
@@ -50,11 +50,11 @@ public class MenuScreen implements IScreen {
                     case "1":
                         logger.info("Browsing products");
                         clearScreen();
-                        router.navigate("/browseproducts", scan);
+                        routerService.navigate("/browseproducts", scan);
                         break;
                     case "2":
                         logger.info("Navigating to Product Search screen");
-                        router.navigate("/productsearch", scan);
+                        routerService.navigate("/productsearch", scan);
                         break exit;
                     case "x":
                         logger.info("Exiting MenuScreen");
