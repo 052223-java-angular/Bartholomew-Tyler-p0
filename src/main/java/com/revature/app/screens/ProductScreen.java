@@ -8,7 +8,7 @@ import com.revature.app.utils.Session;
 import com.revature.app.models.Product;
 
 @AllArgsConstructor
-public class ProductScreen implements IScreen{
+public class ProductScreen implements IScreen {
     private final RouterService routerService;
     private final ProductService productService;
     private final Session session;
@@ -17,26 +17,29 @@ public class ProductScreen implements IScreen{
     public void start(Scanner scan) {
         String input = "";
         exit: {
-            while(true){
-            clearScreen();
-            Product product = productService.findProductById(session.getProductId());
-            System.out.println("------------------- PRODUCT DETAILS --------------------");
-            System.out.println("Name: " + product.getName());
-            System.out.println("Category: " + product.getCategory());
-            System.out.println("Price: $" + product.getPrice());
-            System.out.println("Description:");
-            wrapAndDisplay(product.getDescription());
-            System.out.println("\n------------------------------------------------------");
-            System.out.println("[R] Leave a review of this product - [A] To Add it to your cart");
-            input = scan.nextLine();
-            if (input.equalsIgnoreCase("x")) {
-                routerService.navigate("/menu", scan);
-                // break exit;
-            } 
+            while (true) {
+                if (session.getProductId().isEmpty()) {
+                    break;
+                }
+                clearScreen();
+                Product product = productService.findProductById(session.getProductId());
+                System.out.println("------------------- PRODUCT DETAILS --------------------");
+                System.out.println("Name: " + product.getName());
+                System.out.println("Category: " + product.getCategory());
+                System.out.println("Price: $" + product.getPrice());
+                System.out.println("Description:");
+                wrapAndDisplay(product.getDescription());
+                System.out.println("\n------------------------------------------------------");
+                System.out.println("[R] Leave a review of this product - [A] To Add it to your cart");
+                input = scan.nextLine();
+                if (input.equalsIgnoreCase("x")) {
+                    session.clearProductSession();
+                    routerService.navigate("/menu", scan);
+                    break exit;
+                }
             }
         }
     }
-    
 
     // method for wrapping description text in a next and orderly way
     public static void wrapAndDisplay(String text) {
@@ -69,8 +72,6 @@ public class ProductScreen implements IScreen{
 
         System.out.print(wrappedText);
     }
-
-
 
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
