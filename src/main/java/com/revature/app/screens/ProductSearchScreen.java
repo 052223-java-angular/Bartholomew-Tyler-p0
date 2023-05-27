@@ -194,6 +194,8 @@ public class ProductSearchScreen implements IScreen {
 
                 if (lowerLimitDouble > upperLimitDouble) {
                     message = "Upper limit must be greater than lower limit!";
+                    lowerLimit = "";
+                    upperLimit = "";
                     continue;
                 }
 
