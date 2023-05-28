@@ -94,6 +94,7 @@ public class ProductSearchScreen implements IScreen {
             List<Product> products = productService.findProductsByName(searchString);
             if (products.size() > 0) {
                 printProducts(products);
+                message = "";
             } else {
                 message = "No results found";
                 continue;
@@ -201,15 +202,20 @@ public class ProductSearchScreen implements IScreen {
 
                 List<Product> products = productService.findProductsByPriceRange(lowerLimitDouble, upperLimitDouble);
                 if (products.size() > 0) {
+                    message = "";
                     printProducts(products);
                 } else {
                     message = "No results found";
+                    lowerLimit = "";
+                    upperLimit = "";
                     continue;
                 }
 
                 String input = chooseProduct(scan, products, session);
                 if (input.equalsIgnoreCase("x")) {
-                    break exit;
+                    lowerLimit = "";
+                    upperLimit = "";
+                    continue;
                 }
             }
         }
@@ -282,9 +288,9 @@ public class ProductSearchScreen implements IScreen {
                 }
 
                 Product product = products.get((int) (inputDouble - 1));
-                System.out.println(product.getId());
                 session.setSessionProduct(product);
                 routerService.navigate("/product", scan);
+                return "";
             } else {
                 if (input.equalsIgnoreCase("x")) {
                     return "x";

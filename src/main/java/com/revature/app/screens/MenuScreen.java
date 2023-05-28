@@ -59,8 +59,8 @@ public class MenuScreen implements IScreen {
                     case "x":
                         logger.info("Exiting MenuScreen");
                         error = "";
-                        System.out.println("\nGoodbye!");
                         session.clearSession();
+                        routerService.navigate("/home", scan);
                         break exit;
                     default:
                         logger.warn("Invalid input on MenuScreen!");
