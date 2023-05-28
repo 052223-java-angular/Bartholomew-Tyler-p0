@@ -18,15 +18,6 @@ public class MenuScreen implements IScreen {
     private Session session;
     private static final Logger logger = LogManager.getLogger(MenuScreen.class);
 
-    /**
-     * Constructs a new MenuScreen with the specified Session.
-     *
-     * @param session the Session containing user information
-     */
-    public MenuScreen(Session session) {
-        this.session = session;
-    }
-
     @Override
     public void start(Scanner scan) {
         String input = "";
