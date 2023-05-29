@@ -25,4 +25,8 @@ public class CartService {
     public void removeProductFromCart(String cartId, String productId) {
         cartDAO.removeProductFromCart(cartId, productId);
     }
+
+    public void updateQuantityOfProduct(String cartProductId, int updatedQuantity) {
+        cartDAO.updateQuantityOfProduct(cartProductId, updatedQuantity);
+    }
 }

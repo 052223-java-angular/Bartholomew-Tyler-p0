@@ -74,8 +74,8 @@ public class CartDAO implements CrudDAO<Cart> {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 CartProduct cartProduct = new CartProduct(
+                        rs.getString("id"),
                         cartId,
-                        null,
                         productDAO.findById(rs.getString("product_id")),
                         rs.getInt("quantity"));
                 cartProducts.add(cartProduct);
@@ -144,6 +144,24 @@ public class CartDAO implements CrudDAO<Cart> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, cartId);
             preparedStatement.setString(2, productId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void updateQuantityOfProduct(String cartProductId, int updatedQuantity) {
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
+            String sql = "UPDATE cartproducts SET quantity = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, updatedQuantity);
+            preparedStatement.setString(2, cartProductId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");

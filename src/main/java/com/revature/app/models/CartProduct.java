@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class CartProduct {
     private String id;
-    private User user;
+    private String cartId;
     private Product product;
     private int quantity;
 }
