@@ -19,7 +19,7 @@ public class ProductDAO implements CrudDAO<Product> {
     }
 
     @Override
-    public void update(String id) {
+    public void update(Product product) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
@@ -35,15 +35,14 @@ public class ProductDAO implements CrudDAO<Product> {
         try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
             String sql = "select * from products where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,id);
+            preparedStatement.setString(1, id);
             ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
-                Product product = new Product
-                (rs.getString("id"),
-                rs.getString("name"),
-                rs.getString("category"),
-                rs.getBigDecimal("price"),
-                rs.getString("description"));
+            while (rs.next()) {
+                Product product = new Product(rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getString("category"),
+                        rs.getBigDecimal("price"),
+                        rs.getString("description"));
                 return product;
             }
         } catch (SQLException e) {
@@ -66,8 +65,7 @@ public class ProductDAO implements CrudDAO<Product> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                Product product = new Product
-                        (rs.getString("id"),
+                Product product = new Product(rs.getString("id"),
                         rs.getString("name"),
                         rs.getString("category"),
                         rs.getBigDecimal("price"),

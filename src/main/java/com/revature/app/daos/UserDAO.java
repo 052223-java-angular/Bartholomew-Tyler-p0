@@ -38,7 +38,7 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     @Override
-    public void update(String id) {
+    public void update(User user) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
@@ -51,11 +51,38 @@ public class UserDAO implements CrudDAO<User> {
 
     @Override
     public User findById(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = "SELECT * FROM users WHERE id = ?";
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                // Set the username parameter for the prepared statement
+                ps.setString(1, id);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        // Create a new User object and populate it with data from the result set
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to the database", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load JDBC driver", e);
+        }
+
+        return null;
     }
-    
+
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = "SELECT * FROM users WHERE username = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, username);
@@ -69,9 +96,9 @@ public class UserDAO implements CrudDAO<User> {
                         user.setPassword(rs.getString("password"));
                         return Optional.of(user);
                     }
-                  return Optional.empty();
+                    return Optional.empty();
                 }
- 
+
             }
 
         } catch (SQLException e) {

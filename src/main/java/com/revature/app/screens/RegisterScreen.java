@@ -8,6 +8,7 @@ import com.revature.app.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.revature.app.services.CartService;
 import com.revature.app.services.RouterService;
 import com.revature.app.services.UserService;
 
@@ -20,6 +21,7 @@ import com.revature.app.utils.Session;
 public class RegisterScreen implements IScreen {
     private final RouterService routerService;
     private final UserService userService;
+    private final CartService cartService;
     private final Validator validator;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
     private Session session;
@@ -49,6 +51,7 @@ public class RegisterScreen implements IScreen {
 
                 clearScreen();
                 User user = userService.register(username, password);
+                cartService.createCartFromUserId(user.getId());
                 session.setSession(user);
                 routerService.navigate("/menu", scan);
                 break exit;
