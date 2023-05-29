@@ -18,10 +18,6 @@ public class BrowsingScreen implements IScreen {
     private Session session;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
 
-    public BrowsingScreen(Session session) {
-        this.session = session;
-    }
-
     @Override
     public void start(Scanner scan) {
         String input = "";
