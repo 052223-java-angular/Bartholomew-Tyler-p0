@@ -34,10 +34,10 @@ public class BrowsingScreen implements IScreen {
                 System.out.printf("%5s %40s %15s %10s\n", "", "Name", "Category", "Price");
                 for (int i = 0; i < products.size(); i++) {
                     Product product = products.get(i);
-                    System.out.printf("%5s %40s %15s %10.2f\n", "[" + (i + 1) + "]",
+                    System.out.printf("%5s %40s %15s %10s\n", "[" + (i + 1) + "]",
                             product.getName(),
                             product.getCategory(),
-                            product.getPrice());
+                            "$" + product.getPrice());
                 }
 
                 System.out.print("\nChoose a product (x to go back): ");
