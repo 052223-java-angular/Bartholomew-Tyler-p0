@@ -1,6 +1,5 @@
 package com.revature.app.utils;
 
-import com.revature.app.models.Product;
 import com.revature.app.models.User;
 
 import lombok.AllArgsConstructor;

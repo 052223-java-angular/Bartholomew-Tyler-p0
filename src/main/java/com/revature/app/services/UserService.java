@@ -1,6 +1,5 @@
 package com.revature.app.services;
 
-import java.util.Scanner;
 import java.util.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -28,7 +27,7 @@ public class UserService {
     }
 
     public Optional<User> login(String username, String password) {
-        
+
         Optional<User> user = userDAO.findByUsername(username);
         if (user.isEmpty()) {
             return Optional.empty();
@@ -36,8 +35,7 @@ public class UserService {
         boolean isMatching = BCrypt.checkpw(password, user.get().getPassword());
         if (isMatching) {
             return user;
-        }
-        else {
+        } else {
             return Optional.empty();
         }
     }

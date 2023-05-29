@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import com.revature.app.models.User;
 import com.revature.app.utils.ConnectionFactory;
-import java.io.IOError;
 import java.io.IOException;
 import java.sql.SQLException;
 
