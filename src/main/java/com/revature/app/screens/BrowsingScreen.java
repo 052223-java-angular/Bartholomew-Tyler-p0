@@ -21,6 +21,7 @@ public class BrowsingScreen implements IScreen {
     @Override
     public void start(Scanner scan) {
         String input = "";
+        String message = "";
 
         exit: {
             while (true) {
@@ -36,6 +37,10 @@ public class BrowsingScreen implements IScreen {
                             "$" + product.getPrice());
                 }
 
+                if (!message.isEmpty()) {
+                    System.out.println("\n" + message);
+                }
+
                 System.out.print("\nChoose a product (x to go back): ");
 
                 input = scan.nextLine();
@@ -46,12 +51,12 @@ public class BrowsingScreen implements IScreen {
                     double inputDouble = Double.parseDouble(input);
 
                     if (!StringHelper.isInteger(inputDouble)) {
-                        System.out.println("Invalid option!");
+                        message = "Invalid option!";
                         continue;
                     }
 
                     if (inputDouble > products.size() || inputDouble < 1) {
-                        System.out.println("Invalid option!");
+                        message = "Invalid option!";
                         continue;
                     }
 
@@ -60,7 +65,7 @@ public class BrowsingScreen implements IScreen {
 
                 } else {
                     logger.warn("Invalid input on Product Search Screen!");
-                    System.out.println("Invalid option!");
+                    message = "Invalid option!";
                     continue;
                 }
             }
