@@ -8,6 +8,8 @@ import com.revature.app.services.ProductService;
 import com.revature.app.services.RouterService;
 import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
+import com.revature.app.models.Cart;
+import com.revature.app.models.CartProduct;
 import com.revature.app.models.Product;
 
 @AllArgsConstructor
@@ -22,65 +24,116 @@ public class ProductScreen implements IScreen {
         String input = "";
         String message = "";
         int minimumQuantity = 1;
-        int maximumQuantity = 10;
+        int maximumQuantity = 20;
+        String PRODUCT_ADDED_TO_CART_SUCCESS_MSG = "Item added to cart succesfully.";
+        String PRODUCT_DELETED_FROM_CART_SUCCESS_MSG = "Item removed from cart succcessfully.";
+        String INVALID_OPTION_MSG = "Invalid option!";
 
-        exit: {
-            while (true) {
-                if (session.getProductId().isEmpty()) {
-                    break;
-                }
-                clearScreen();
-                Product product = productService.findProductById(session.getProductId());
-                System.out.println("------------------- PRODUCT DETAILS --------------------");
-                System.out.println("Name: " + product.getName());
-                System.out.println("Category: " + product.getCategory());
-                System.out.println("Price: $" + product.getPrice());
-                System.out.println("Description:");
-                wrapAndDisplay(product.getDescription());
-                System.out.println("\n------------------------------------------------------");
+        while (true) {
+            Cart cart = cartService.getCartFromUserId(session.getId());
+            if (session.getProductId().isEmpty()) {
+                break;
+            }
+            clearScreen();
+            Product product = productService.findProductById(session.getProductId());
+            System.out.println("------------------- PRODUCT DETAILS --------------------");
+            System.out.println("Name: " + product.getName());
+            System.out.println("Category: " + product.getCategory());
+            System.out.println("Price: $" + product.getPrice());
+            System.out.println("Description:");
+            wrapAndDisplay(product.getDescription());
+            System.out.println("\n------------------------------------------------------");
+
+            if (!productExistsInCart(session.getProductId(), cart)) {
                 System.out.println("[r] Review this product - [a] Add to cart");
+            } else {
+                System.out.println("[r] Review this product - [d] Delete from cart");
+            }
 
-                if (!message.isEmpty()) {
-                    System.out.println("\n" + message);
-                }
+            if (!message.isEmpty()) {
+                System.out.println("\n" + message);
+            }
 
-                System.out.print("\nEnter (x to cancel): ");
-                input = scan.nextLine();
+            System.out.print("\nEnter (x to cancel): ");
+            input = scan.nextLine();
 
-                switch (input.toLowerCase()) {
-                    case "a":
-                        String addToCartMessage = "";
-                        int quantity = 1;
+            switch (input.toLowerCase()) {
+                case "a":
+                    String addToCartMessage = "";
+                    int quantity = 1;
+                    while (true) {
+                        if (!addToCartMessage.isEmpty()) {
+                            System.out.println("\n" + addToCartMessage);
+                        }
+                        System.out.print("Enter quantity between " + minimumQuantity + " and " + maximumQuantity
+                                + " (enter for " + minimumQuantity + ", x to cancel): ");
+                        input = scan.nextLine();
+                        if (input.equalsIgnoreCase("x")) {
+                            break;
+                        }
+
+                        if (input.isBlank()) {
+                            cartService.addProductToCart(cart.getId(), session.getProductId(), quantity);
+                            message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
+                            break;
+                        }
+
+                        if (!StringHelper.isNumeric(input)) {
+                            addToCartMessage = INVALID_OPTION_MSG;
+                            continue;
+                        }
+
+                        double inputDouble = Double.parseDouble(input);
+
+                        if (!StringHelper.isInteger(inputDouble)) {
+                            addToCartMessage = INVALID_OPTION_MSG;
+                            continue;
+                        }
+
+                        if (inputDouble < minimumQuantity || inputDouble > maximumQuantity) {
+                            addToCartMessage = "Quantity out of range!";
+                            continue;
+                        }
+
+                        quantity = (int) inputDouble;
+
+                        cartService.addProductToCart(cart.getId(), session.getProductId(), quantity);
+                        message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
+                        break;
+                    }
+                    break;
+                case "d":
+                    String deleteFromCartMessage = "";
+                    deleteFromCart: {
                         while (true) {
-                            if (!addToCartMessage.isEmpty()) {
-                                System.out.println("\n" + addToCartMessage);
+                            if (!deleteFromCartMessage.isEmpty()) {
+                                System.out.println("\n" + deleteFromCartMessage);
                             }
-                            System.out.print("Enter quantity between " + minimumQuantity + " and " + maximumQuantity
-                                    + " (enter for " + minimumQuantity + ", x to cancel): ");
+
+                            System.out.print("Are you sure you want to remove this item from your cart? (y/n): ");
+
                             input = scan.nextLine();
-                            if (input.equalsIgnoreCase("x")) {
-                                break;
-                            }
 
-                            if (input.isBlank()) {
-                                // cartService.addProductToCart()
-                                message = "Item added to cart succesfully.";
-                                break;
-                            }
-
-                            if (!StringHelper.isNumeric(input)) {
-                                addToCartMessage = "Invalid option!";
-                                continue;
+                            switch (input.toLowerCase()) {
+                                case "y":
+                                    cartService.removeProductFromCart(cart.getId(), session.getProductId());
+                                    message = PRODUCT_DELETED_FROM_CART_SUCCESS_MSG;
+                                    break deleteFromCart;
+                                case "n":
+                                    break deleteFromCart;
+                                default:
+                                    deleteFromCartMessage = INVALID_OPTION_MSG;
+                                    break;
                             }
                         }
-                        break;
-                    case "x":
-                        session.clearProductSession();
-                        break;
-                    default:
-                        message = "Invalid option!";
-                        continue;
-                }
+                    }
+                    break;
+                case "x":
+                    session.clearProductSession();
+                    break;
+                default:
+                    message = INVALID_OPTION_MSG;
+                    continue;
             }
         }
 
@@ -121,5 +174,14 @@ public class ProductScreen implements IScreen {
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    private boolean productExistsInCart(String productId, Cart cart) {
+        for (CartProduct cartProduct : cart.getCartProducts()) {
+            if (cartProduct.getProduct().getId().equals(productId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

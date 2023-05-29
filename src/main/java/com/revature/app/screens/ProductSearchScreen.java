@@ -261,9 +261,9 @@ public class ProductSearchScreen implements IScreen {
         System.out.println("--------------------------------------------------------------------------");
         for (int i = 0; i < products.size(); i++) {
             Product product = products.get(i);
-            System.out.printf("%5s %40s %15s %10.2f\n", "[" + (i + 1) + "]", product.getName(),
+            System.out.printf("%5s %40s %15s %10s\n", "[" + (i + 1) + "]", product.getName(),
                     product.getCategory(),
-                    product.getPrice());
+                    "$" + product.getPrice());
         }
     }
 

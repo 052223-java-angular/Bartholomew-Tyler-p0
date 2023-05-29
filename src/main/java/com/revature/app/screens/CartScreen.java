@@ -23,6 +23,8 @@ public class CartScreen implements IScreen {
         Cart cart = cartService.getCartFromUserId(session.getId());
         while (true) {
             clearScreen();
+            System.out.println("Cart");
+            System.out.println("-----------------------------------------------------------------");
             printCartProducts(cart.getCartProducts());
 
             System.out.print("\nEnter (x to go back): ");
@@ -38,7 +40,15 @@ public class CartScreen implements IScreen {
         if (cartProducts.size() < 1) {
             System.out.println("Your cart is empty!");
         } else {
-
+            for (int i = 0; i < cartProducts.size(); i++) {
+                CartProduct cartProduct = cartProducts.get(i);
+                System.out.printf("%5s %-40s %-10s\n",
+                        "[" + (i + 1) + "]",
+                        cartProduct.getProduct().getName(),
+                        "$" + cartProduct.getProduct().getPrice());
+                System.out.printf("%5s <<%s>>\n", " ", cartProduct.getProduct().getCategory());
+                System.out.printf("%5s Qty: %s\n", " ", cartProduct.getQuantity());
+            }
         }
     }
 

@@ -17,4 +17,12 @@ public class CartService {
     public Cart getCartFromUserId(String userId) {
         return cartDAO.getCartFromUserId(userId);
     }
+
+    public void addProductToCart(String cartId, String productId, int quantity) {
+        cartDAO.addProductToCart(cartId, productId, quantity);
+    }
+
+    public void removeProductFromCart(String cartId, String productId) {
+        cartDAO.removeProductFromCart(cartId, productId);
+    }
 }
