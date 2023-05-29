@@ -1,5 +1,7 @@
 package com.revature.app.models;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CartProduct {
+public class Cart {
     private String id;
     private User user;
-    private Product product;
-    private int quantity;
+    private List<CartProduct> cartProducts;
 }
