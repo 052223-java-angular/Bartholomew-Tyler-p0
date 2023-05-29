@@ -33,6 +33,7 @@ public class MenuScreen implements IScreen {
                 System.out.println("Press x to logout and go back to the login screen");
                 System.out.println("\n[1] Browse All Products");
                 System.out.println("[2] Search for Products");
+                System.out.println("[3] View Cart");
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
@@ -42,10 +43,14 @@ public class MenuScreen implements IScreen {
                         logger.info("Browsing products");
                         clearScreen();
                         routerService.navigate("/browseproducts", scan);
-                        break;
+                        break exit;
                     case "2":
                         logger.info("Navigating to Product Search screen");
                         routerService.navigate("/productsearch", scan);
+                        break exit;
+                    case "3":
+                        logger.info("Navigating to Cart screen");
+                        routerService.navigate("/cart", scan);
                         break exit;
                     case "x":
                         logger.info("Exiting MenuScreen");

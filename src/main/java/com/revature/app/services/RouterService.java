@@ -6,6 +6,7 @@ import com.revature.app.daos.CartDAO;
 import com.revature.app.daos.ProductDAO;
 import com.revature.app.daos.UserDAO;
 import com.revature.app.screens.BrowsingScreen;
+import com.revature.app.screens.CartScreen;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.LoginScreen;
@@ -25,6 +26,9 @@ public class RouterService {
 
     public void navigate(String path, Scanner scanner) {
         switch (path) {
+            case "/cart":
+                new CartScreen(this, getCartService(), session).start(scanner);
+                break;
             case "/home":
                 new HomeScreen(this, session).start(scanner);
                 break;
@@ -44,7 +48,7 @@ public class RouterService {
                 new ProductSearchScreen(this, getProductService(), session).start(scanner);
                 break;
             case "/product":
-                new ProductScreen(this, getProductService(), session).start(scanner);
+                new ProductScreen(this, getProductService(), this.getCartService(), session).start(scanner);
                 break;
             default:
                 break;
@@ -65,6 +69,6 @@ public class RouterService {
     }
 
     private CartService getCartService() {
-        return new CartService(new CartDAO());
+        return new CartService(new CartDAO(new UserDAO()));
     }
 }
