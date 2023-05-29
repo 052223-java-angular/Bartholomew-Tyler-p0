@@ -45,7 +45,8 @@ public class CartScreen implements IScreen {
                 switch (input.toLowerCase()) {
                     case "1":
                         printCart(cart, true);
-                        input = getNumericInputWithinRange(scan, "\nEnter to edit quantity (x to go back): ", 1,
+                        input = getNumericInputWithinRange(scan,
+                                "\nEnter product number to edit quantity (x to go back): ", 1,
                                 cart.getCartProducts().size());
                         if (input.equalsIgnoreCase("x")) {
                             message = "";
