@@ -4,8 +4,6 @@ import java.util.Scanner;
 import lombok.AllArgsConstructor;
 
 import com.revature.app.services.CartService;
-import com.revature.app.services.ProductService;
-import com.revature.app.services.RouterService;
 import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 import com.revature.app.models.Cart;
@@ -14,9 +12,8 @@ import com.revature.app.models.Product;
 
 @AllArgsConstructor
 public class ProductScreen implements IScreen {
-    private final RouterService routerService;
-    private final ProductService productService;
     private final CartService cartService;
+    private final Product product;
     private final Session session;
 
     @Override
@@ -29,114 +26,110 @@ public class ProductScreen implements IScreen {
         String PRODUCT_DELETED_FROM_CART_SUCCESS_MSG = "Item removed from cart succcessfully.";
         String INVALID_OPTION_MSG = "Invalid option!";
 
-        while (true) {
-            Cart cart = cartService.getCartFromUserId(session.getId());
-            if (session.getProductId().isEmpty()) {
-                break;
-            }
-            clearScreen();
-            Product product = productService.findProductById(session.getProductId());
-            System.out.println("------------------- PRODUCT DETAILS --------------------");
-            System.out.println("Name: " + product.getName());
-            System.out.println("Category: " + product.getCategory());
-            System.out.println("Price: $" + product.getPrice());
-            System.out.println("Description:");
-            wrapAndDisplay(product.getDescription());
-            System.out.println("\n------------------------------------------------------");
+        main: {
+            while (true) {
+                Cart cart = cartService.getCartFromUserId(session.getId());
+                clearScreen();
+                System.out.println("------------------- PRODUCT DETAILS --------------------");
+                System.out.println("Name: " + product.getName());
+                System.out.println("Category: " + product.getCategory());
+                System.out.println("Price: $" + product.getPrice());
+                System.out.println("Description:");
+                wrapAndDisplay(product.getDescription());
+                System.out.println("\n------------------------------------------------------");
 
-            if (!productExistsInCart(session.getProductId(), cart)) {
-                System.out.println("[r] Review this product - [a] Add to cart");
-            } else {
-                System.out.println("[r] Review this product - [d] Delete from cart");
-            }
+                if (!productExistsInCart(product.getId(), cart)) {
+                    System.out.println("[r] Review this product - [a] Add to cart");
+                } else {
+                    System.out.println("[r] Review this product - [d] Delete from cart");
+                }
 
-            if (!message.isEmpty()) {
-                System.out.println("\n" + message);
-            }
+                if (!message.isEmpty()) {
+                    System.out.println("\n" + message);
+                }
 
-            System.out.print("\nEnter (x to cancel): ");
-            input = scan.nextLine();
+                System.out.print("\nEnter (x to cancel): ");
+                input = scan.nextLine();
 
-            switch (input.toLowerCase()) {
-                case "a":
-                    String addToCartMessage = "";
-                    int quantity = 1;
-                    while (true) {
-                        if (!addToCartMessage.isEmpty()) {
-                            System.out.println("\n" + addToCartMessage);
-                        }
-                        System.out.print("Enter quantity between " + minimumQuantity + " and " + maximumQuantity
-                                + " (enter for " + minimumQuantity + ", x to cancel): ");
-                        input = scan.nextLine();
-                        if (input.equalsIgnoreCase("x")) {
-                            break;
-                        }
+                switch (input.toLowerCase()) {
+                    case "a":
+                        String addToCartMessage = "";
+                        int quantity = 1;
+                        while (true) {
+                            if (!addToCartMessage.isEmpty()) {
+                                System.out.println("\n" + addToCartMessage);
+                            }
+                            System.out.print("Enter quantity between " + minimumQuantity + " and " + maximumQuantity
+                                    + " (enter for " + minimumQuantity + ", x to cancel): ");
+                            input = scan.nextLine();
+                            if (input.equalsIgnoreCase("x")) {
+                                break;
+                            }
 
-                        if (input.isBlank()) {
-                            cartService.addProductToCart(cart.getId(), session.getProductId(), quantity);
+                            if (input.isBlank()) {
+                                cartService.addProductToCart(cart.getId(), product.getId(), quantity);
+                                message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
+                                break;
+                            }
+
+                            if (!StringHelper.isNumeric(input)) {
+                                addToCartMessage = INVALID_OPTION_MSG;
+                                continue;
+                            }
+
+                            double inputDouble = Double.parseDouble(input);
+
+                            if (!StringHelper.isInteger(inputDouble)) {
+                                addToCartMessage = INVALID_OPTION_MSG;
+                                continue;
+                            }
+
+                            if (inputDouble < minimumQuantity || inputDouble > maximumQuantity) {
+                                addToCartMessage = "Quantity out of range!";
+                                continue;
+                            }
+
+                            quantity = (int) inputDouble;
+
+                            cartService.addProductToCart(cart.getId(), product.getId(), quantity);
                             message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                             break;
                         }
-
-                        if (!StringHelper.isNumeric(input)) {
-                            addToCartMessage = INVALID_OPTION_MSG;
-                            continue;
-                        }
-
-                        double inputDouble = Double.parseDouble(input);
-
-                        if (!StringHelper.isInteger(inputDouble)) {
-                            addToCartMessage = INVALID_OPTION_MSG;
-                            continue;
-                        }
-
-                        if (inputDouble < minimumQuantity || inputDouble > maximumQuantity) {
-                            addToCartMessage = "Quantity out of range!";
-                            continue;
-                        }
-
-                        quantity = (int) inputDouble;
-
-                        cartService.addProductToCart(cart.getId(), session.getProductId(), quantity);
-                        message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                         break;
-                    }
-                    break;
-                case "d":
-                    String deleteFromCartMessage = "";
-                    deleteFromCart: {
-                        while (true) {
-                            if (!deleteFromCartMessage.isEmpty()) {
-                                System.out.println("\n" + deleteFromCartMessage);
-                            }
+                    case "d":
+                        String deleteFromCartMessage = "";
+                        deleteFromCart: {
+                            while (true) {
+                                if (!deleteFromCartMessage.isEmpty()) {
+                                    System.out.println("\n" + deleteFromCartMessage);
+                                }
 
-                            System.out.print("Are you sure you want to remove this item from your cart? (y/n): ");
+                                System.out.print("Are you sure you want to remove this item from your cart? (y/n): ");
 
-                            input = scan.nextLine();
+                                input = scan.nextLine();
 
-                            switch (input.toLowerCase()) {
-                                case "y":
-                                    cartService.removeProductFromCart(cart.getId(), session.getProductId());
-                                    message = PRODUCT_DELETED_FROM_CART_SUCCESS_MSG;
-                                    break deleteFromCart;
-                                case "n":
-                                    break deleteFromCart;
-                                default:
-                                    deleteFromCartMessage = INVALID_OPTION_MSG;
-                                    break;
+                                switch (input.toLowerCase()) {
+                                    case "y":
+                                        cartService.removeProductFromCart(cart.getId(), product.getId());
+                                        message = PRODUCT_DELETED_FROM_CART_SUCCESS_MSG;
+                                        break deleteFromCart;
+                                    case "n":
+                                        break deleteFromCart;
+                                    default:
+                                        deleteFromCartMessage = INVALID_OPTION_MSG;
+                                        break;
+                                }
                             }
                         }
-                    }
-                    break;
-                case "x":
-                    session.clearProductSession();
-                    break;
-                default:
-                    message = INVALID_OPTION_MSG;
-                    continue;
+                        break;
+                    case "x":
+                        break main;
+                    default:
+                        message = INVALID_OPTION_MSG;
+                        continue;
+                }
             }
         }
-
     }
 
     // method for wrapping description text in a next and orderly way

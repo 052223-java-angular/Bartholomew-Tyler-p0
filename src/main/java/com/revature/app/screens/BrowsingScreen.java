@@ -60,8 +60,7 @@ public class BrowsingScreen implements IScreen {
                     }
 
                     Product product = products.get((int) (inputDouble - 1));
-                    session.setSessionProduct(product);
-                    routerService.navigate("/product", scan);
+                    routerService.navigate("/product", scan, product);
 
                 } else {
                     logger.warn("Invalid input on Product Search Screen!");

@@ -17,24 +17,14 @@ import lombok.ToString;
 public class Session {
     private String id;
     private String username;
-    private String productId;
 
     public void setSession(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
     }
 
-    public void setSessionProduct(Product product) {
-        this.productId = product.getId();
-    }
-
     public void clearSession() {
         this.id = "";
         this.username = "";
-        this.productId = "";
-    }
-
-    public void clearProductSession() {
-        this.productId = "";
     }
 }
