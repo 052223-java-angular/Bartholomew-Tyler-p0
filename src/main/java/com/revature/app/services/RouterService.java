@@ -2,6 +2,7 @@ package com.revature.app.services;
 
 import java.util.Scanner;
 
+import com.revature.app.daos.OrderDAO;
 import com.revature.app.daos.ProductDAO;
 import com.revature.app.daos.UserDAO;
 import com.revature.app.models.Product;
@@ -10,6 +11,7 @@ import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
+import com.revature.app.screens.OrderHistoryScreen;
 import com.revature.app.screens.ProductScreen;
 import com.revature.app.screens.ProductSearchScreen;
 
@@ -46,6 +48,9 @@ public class RouterService {
             case "/product":
                 new ProductScreen(this, getProductService(), session).start(scanner);
                 break;
+            case "/orderhistory":
+                new OrderHistoryScreen(this, getOrderService(), session).start(scanner);
+                break;
             default:
                 break;
         }
@@ -62,6 +67,10 @@ public class RouterService {
 
     private ProductService getProductService() {
         return new ProductService(new ProductDAO());
+    }
+
+    private OrderService getOrderService() {
+        return new OrderService(new OrderDAO());
     }
 
 }

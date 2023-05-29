@@ -1,6 +1,6 @@
 package com.revature.app.models;
 
-import java.util.Currency;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +12,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
-
 public class Order {
     private String id;
     private String user_id;
-    private Currency amount;
-    private String payment_method_id;
+    private BigDecimal amount;
+    private String date;
+    // private String payment_method_id;
 }
