@@ -43,15 +43,15 @@ public class MenuScreen implements IScreen {
                         logger.info("Browsing products");
                         clearScreen();
                         routerService.navigate("/browseproducts", scan);
-                        break exit;
+                        break;
                     case "2":
                         logger.info("Navigating to Product Search screen");
                         routerService.navigate("/productsearch", scan);
-                        break exit;
+                        break;
                     case "3":
                         logger.info("Navigating to Cart screen");
                         routerService.navigate("/cart", scan);
-                        break exit;
+                        break;
                     case "x":
                         logger.info("Exiting MenuScreen");
                         error = "";
