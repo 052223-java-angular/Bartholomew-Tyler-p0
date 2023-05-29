@@ -69,19 +69,6 @@ public class BrowsingScreen implements IScreen {
                     continue;
                 }
             }
-
-            // try {
-            // index = Integer.parseInt(input);
-            // if (index >= 0 && index < products.size()) {
-            // Product selectedProduct = products.get(index);
-            // System.out.println("You have selected " + selectedProduct.getName());
-            // } else {
-            // System.out.println("Invalid option! Try again.");
-            // }
-            // } catch (NumberFormatException e) {
-            // System.out.println("Invalid input. Please try again");
-            // }
-
         }
     }
 
