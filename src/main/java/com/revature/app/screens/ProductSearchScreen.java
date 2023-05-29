@@ -287,6 +287,7 @@ public class ProductSearchScreen implements IScreen {
                 }
 
                 Product product = products.get((int) (inputDouble - 1));
+                logger.info("Navigating to ProductScreen");
                 routerService.navigate("/product", scan, product);
                 return "";
             } else {

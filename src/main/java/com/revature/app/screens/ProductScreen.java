@@ -1,6 +1,10 @@
 package com.revature.app.screens;
 
 import java.util.Scanner;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import lombok.AllArgsConstructor;
 
 import com.revature.app.services.CartService;
@@ -15,6 +19,7 @@ public class ProductScreen implements IScreen {
     private final CartService cartService;
     private final Product product;
     private final Session session;
+    private static final Logger logger = LogManager.getLogger(ProductScreen.class);
 
     @Override
     public void start(Scanner scan) {
@@ -28,6 +33,7 @@ public class ProductScreen implements IScreen {
 
         main: {
             while (true) {
+                logger.info("Navigated to ProductScreen");
                 Cart cart = cartService.getCartFromUserId(session.getId());
                 clearScreen();
                 System.out.println("------------------- PRODUCT DETAILS --------------------");
@@ -68,11 +74,13 @@ public class ProductScreen implements IScreen {
 
                             if (input.isBlank()) {
                                 cartService.addProductToCart(cart.getId(), product.getId(), quantity);
+                                logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                                 message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                                 break;
                             }
 
                             if (!StringHelper.isNumeric(input)) {
+                                logger.warn("Invalid input on ProductScreen!");
                                 addToCartMessage = INVALID_OPTION_MSG;
                                 continue;
                             }
@@ -80,11 +88,13 @@ public class ProductScreen implements IScreen {
                             double inputDouble = Double.parseDouble(input);
 
                             if (!StringHelper.isInteger(inputDouble)) {
+                                logger.warn("Invalid input on ProductScreen!");
                                 addToCartMessage = INVALID_OPTION_MSG;
                                 continue;
                             }
 
                             if (inputDouble < minimumQuantity || inputDouble > maximumQuantity) {
+                                logger.warn("Invalid input on ProductScreen!");
                                 addToCartMessage = "Quantity out of range!";
                                 continue;
                             }
@@ -92,6 +102,7 @@ public class ProductScreen implements IScreen {
                             quantity = (int) inputDouble;
 
                             cartService.addProductToCart(cart.getId(), product.getId(), quantity);
+                            logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                             message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                             break;
                         }
@@ -111,11 +122,14 @@ public class ProductScreen implements IScreen {
                                 switch (input.toLowerCase()) {
                                     case "y":
                                         cartService.removeProductFromCart(cart.getId(), product.getId());
+                                        logger.info("Removed " + product.getName() + " from " + session.getUsername()
+                                                + "'s cart");
                                         message = PRODUCT_DELETED_FROM_CART_SUCCESS_MSG;
                                         break deleteFromCart;
                                     case "n":
                                         break deleteFromCart;
                                     default:
+                                        logger.warn("Invalid input on ProductScreen!");
                                         deleteFromCartMessage = INVALID_OPTION_MSG;
                                         break;
                                 }

@@ -24,6 +24,7 @@ public class MenuScreen implements IScreen {
         String error = "";
         exit: {
             while (true) {
+                logger.info("Navigated to MenuScreen");
                 clearScreen();
                 System.out.println("Welcome to the menu screen, " + session.getUsername() + "!");
 
@@ -49,7 +50,6 @@ public class MenuScreen implements IScreen {
                         routerService.navigate("/productsearch", scan);
                         break;
                     case "3":
-                        logger.info("Navigating to Cart screen");
                         routerService.navigate("/cart", scan);
                         break;
                     case "x":

@@ -3,6 +3,9 @@ package com.revature.app.screens;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revature.app.services.RouterService;
 import com.revature.app.models.Cart;
 import com.revature.app.models.CartProduct;
@@ -17,6 +20,7 @@ public class CartScreen implements IScreen {
     RouterService routerService;
     CartService cartService;
     Session session;
+    private static final Logger logger = LogManager.getLogger(CartScreen.class);
 
     @Override
     public void start(Scanner scan) {
@@ -24,6 +28,7 @@ public class CartScreen implements IScreen {
         String message = "";
         main: {
             while (true) {
+                logger.info("Navigated to CartScreen");
                 Cart cart = cartService.getCartFromUserId(session.getId());
                 printCart(cart, false);
 
@@ -61,16 +66,24 @@ public class CartScreen implements IScreen {
 
                         if (input.equalsIgnoreCase("0")) {
                             cartService.removeProductFromCart(cart.getId(), cartProduct.getProduct().getId());
+                            logger.info(
+                                    "Removed " + cartProduct.getProduct().getName() + " from " + session.getUsername()
+                                            + "'s cart");
                             message = cartProduct.getProduct().getName() + " removed successfully.";
                             continue;
                         }
 
-                        cartService.updateQuantityOfProduct(cartProduct.getId(), Integer.parseInt(input));
+                        int updatedQuantity = Integer.parseInt(input);
+                        cartService.updateQuantityOfProduct(cartProduct.getId(), updatedQuantity);
+                        logger.info("Updated quantity of " + cartProduct.getProduct().getName() + " in "
+                                + session.getUsername() + "'s cart from " + cartProduct.getQuantity() + " to "
+                                + updatedQuantity);
                         message = cartProduct.getProduct().getName() + " quantity updated successfully.";
                         continue;
                     case "x":
                         break main;
                     default:
+                        logger.warn("Invalid input on CartScreen!");
                         message = "Invalid input!";
                         continue;
                 }

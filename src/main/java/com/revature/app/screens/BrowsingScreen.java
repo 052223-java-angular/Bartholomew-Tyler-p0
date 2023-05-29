@@ -16,7 +16,7 @@ public class BrowsingScreen implements IScreen {
     private RouterService routerService;
     private ProductService productService;
     private Session session;
-    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
+    private static final Logger logger = LogManager.getLogger(BrowsingScreen.class);
 
     @Override
     public void start(Scanner scan) {
@@ -51,20 +51,23 @@ public class BrowsingScreen implements IScreen {
                     double inputDouble = Double.parseDouble(input);
 
                     if (!StringHelper.isInteger(inputDouble)) {
+                        logger.warn("Invalid input on ProductSearchScreen!");
                         message = "Invalid option!";
                         continue;
                     }
 
                     if (inputDouble > products.size() || inputDouble < 1) {
+                        logger.warn("Invalid input on ProductSearchScreen!");
                         message = "Invalid option!";
                         continue;
                     }
 
                     Product product = products.get((int) (inputDouble - 1));
+                    logger.info("Navigating to ProductScreen");
                     routerService.navigate("/product", scan, product);
 
                 } else {
-                    logger.warn("Invalid input on Product Search Screen!");
+                    logger.warn("Invalid input on ProductSearchScreen!");
                     message = "Invalid option!";
                     continue;
                 }
