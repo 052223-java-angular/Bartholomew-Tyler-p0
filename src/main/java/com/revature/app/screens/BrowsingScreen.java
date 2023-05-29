@@ -16,29 +16,32 @@ public class BrowsingScreen implements IScreen {
     private RouterService routerService;
     private ProductService productService;
     private Session session;
-    private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
-
-    public BrowsingScreen(Session session) {
-        this.session = session;
-    }
+    private static final Logger logger = LogManager.getLogger(BrowsingScreen.class);
 
     @Override
     public void start(Scanner scan) {
         String input = "";
+        String message = "";
 
         exit: {
             while (true) {
                 clearScreen();
-                System.out.println("Welcome to the full inventory screen, solo!");
+                System.out.println("Welcome to the full inventory screen, " + session.getUsername() + "!");
                 List<Product> products = productService.findAllProducts();
                 System.out.printf("%5s %40s %15s %10s\n", "", "Name", "Category", "Price");
                 for (int i = 0; i < products.size(); i++) {
                     Product product = products.get(i);
-                    System.out.printf("%5s %40s %15s %10.2f\n", "[" + (i + 1) + "]",
+                    System.out.printf("%5s %40s %15s %10s\n", "[" + (i + 1) + "]",
                             product.getName(),
                             product.getCategory(),
-                            product.getPrice());
+                            "$" + product.getPrice());
                 }
+
+                if (!message.isEmpty()) {
+                    System.out.println("\n" + message);
+                }
+
+                System.out.print("\nChoose a product (x to go back): ");
 
                 input = scan.nextLine();
                 if (input.equalsIgnoreCase("x")) {
@@ -46,45 +49,31 @@ public class BrowsingScreen implements IScreen {
                 }
                 if (StringHelper.isNumeric(input)) {
                     double inputDouble = Double.parseDouble(input);
-    
+
                     if (!StringHelper.isInteger(inputDouble)) {
-                        System.out.println("Invalid option!");
+                        logger.warn("Invalid input on ProductSearchScreen!");
+                        message = "Invalid option!";
                         continue;
                     }
-    
+
                     if (inputDouble > products.size() || inputDouble < 1) {
-                        System.out.println("Invalid option!");
+                        logger.warn("Invalid input on ProductSearchScreen!");
+                        message = "Invalid option!";
                         continue;
                     }
-    
+
                     Product product = products.get((int) (inputDouble - 1));
-                    System.out.println(product.getId());
-                    session.setSessionProduct(product);
-                    routerService.navigate("/product", scan);
+                    logger.info("Navigating to ProductScreen");
+                    routerService.navigate("/product", scan, product);
 
-                    } else {
-                        logger.warn("Invalid input on Product Search Screen!");
-                        System.out.println("Invalid option!");
-                        continue;
-                    }
+                } else {
+                    logger.warn("Invalid input on ProductSearchScreen!");
+                    message = "Invalid option!";
+                    continue;
                 }
-                
-                
-                
-                // try {
-                //     index = Integer.parseInt(input);
-                //     if (index >= 0 && index < products.size()) {
-                //         Product selectedProduct = products.get(index);
-                //         System.out.println("You have selected " + selectedProduct.getName());
-                //     } else {
-                //         System.out.println("Invalid option! Try again.");
-                //     }
-                // } catch (NumberFormatException e) {
-                //     System.out.println("Invalid input. Please try again");
-                // }
-
             }
         }
+    }
 
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
