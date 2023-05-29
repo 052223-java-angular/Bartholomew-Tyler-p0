@@ -1,4 +1,5 @@
 package com.revature.app.daos;
+
 import java.util.List;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.io.IOError;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class OrderDAO implements CrudDAO<Order>{
+public class OrderDAO implements CrudDAO<Order> {
 
     @Override
     public void save(Order obj) {
@@ -20,7 +21,7 @@ public class OrderDAO implements CrudDAO<Order>{
     }
 
     @Override
-    public void update(String id) {
+    public void update(Order order) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
@@ -37,7 +38,6 @@ public class OrderDAO implements CrudDAO<Order>{
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
-    
     public List<Order> findUsersOrders(String user_id) {
         List<Order> orders = new ArrayList<Order>();
         try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
@@ -45,13 +45,12 @@ public class OrderDAO implements CrudDAO<Order>{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user_id);
             ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()) {
-                Order order = new Order
-                (rs.getString("id"),
-                rs.getString("name"),
-                rs.getBigDecimal("amount"),
-                rs.getString("description"));
-            orders.add(order);    
+            while (rs.next()) {
+                Order order = new Order(rs.getString("id"),
+                        rs.getString("name"),
+                        rs.getBigDecimal("amount"),
+                        rs.getString("description"));
+                orders.add(order);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
@@ -70,5 +69,5 @@ public class OrderDAO implements CrudDAO<Order>{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
-    
+
 }
