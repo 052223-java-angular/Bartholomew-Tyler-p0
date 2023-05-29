@@ -22,31 +22,35 @@ public class CartScreen implements IScreen {
         String input = "";
         String message = "";
         Cart cart = cartService.getCartFromUserId(session.getId());
-        while (true) {
-            clearScreen();
-            System.out.println("Cart");
-            System.out.println("-----------------------------------------------------------------");
-            printCart(cart, false);
+        main: {
+            while (true) {
+                clearScreen();
+                System.out.println("Cart");
+                System.out.println("-----------------------------------------------------------------");
+                printCart(cart, false);
 
-            if (!message.isEmpty()) {
-                System.out.println(message);
-            }
+                if (!message.isEmpty()) {
+                    System.out.println(message);
+                }
 
-            System.out.println("\n[1] Edit product quantity");
-            System.out.println("[2] Checkout");
-            System.out.println("[x] Exit");
+                System.out.println("\n[1] Edit product quantity");
+                System.out.println("[2] Checkout");
+                System.out.println("[x] Exit");
 
-            System.out.print("\nEnter: ");
-            input = scan.nextLine();
+                System.out.print("\nEnter: ");
+                input = scan.nextLine();
 
-            switch (input.toLowerCase()) {
-                case "1":
-                case "2":
-                case "x":
-                    break;
-                default:
-                    message = "Invalid input!";
-                    continue;
+                switch (input.toLowerCase()) {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "x":
+                        break main;
+                    default:
+                        message = "Invalid input!";
+                        continue;
+                }
             }
         }
     }
