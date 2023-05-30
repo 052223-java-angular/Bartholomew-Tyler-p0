@@ -3,7 +3,9 @@ package com.revature.app.screens;
 import java.util.Scanner;
 
 import com.revature.app.models.Product;
+import com.revature.app.services.ReviewService;
 import com.revature.app.services.RouterService;
+import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +16,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CreateReviewScreen implements IScreen {
     private final RouterService routerService;
+    private final ReviewService reviewService;
     private final Product product;
+    private Session session;
     private static final Logger logger = LogManager.getLogger(CreateReviewScreen.class);
 
     @Override
@@ -78,6 +82,9 @@ public class CreateReviewScreen implements IScreen {
 
                         switch (input.toLowerCase()) {
                             case "y":
+                                reviewService.createReview(session.getId(), product.getId(), ratingInt, review);
+                                routerService.navigate("/reviews", scan, product);
+                                break main;
                             case "n":
                                 break addReview;
                             default:
@@ -88,6 +95,7 @@ public class CreateReviewScreen implements IScreen {
                 }
             }
         }
+
     }
 
     private void clearScreen() {
