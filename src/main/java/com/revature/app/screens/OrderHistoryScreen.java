@@ -25,10 +25,13 @@ public class OrderHistoryScreen implements IScreen {
     @Override
     public void start(Scanner scan) {
         String input = "";
+        String message = "";
 
         while (true) {
             clearScreen();
-            System.out.println("View your previous orders here!");
+            System.out.println("Previous Orders");
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------");
             List<Order> orders = orderService.getAllUsersOrders(session.getId());
             if (orders.size() > 0) {
                 System.out.printf("%5s %40s %15s %26s\n", "", "Order Id", "Amount", "Date");
@@ -36,16 +39,24 @@ public class OrderHistoryScreen implements IScreen {
                     Order order = orders.get(i);
                     System.out.printf("%5s %40s %15s %26s\n", "[" + (i + 1) + "]",
                             order.getId(),
-                            order.getAmount(),
+                            "$" + order.getAmount(),
                             order.getDate());
                 }
             } else {
                 System.out.println("You have no previous orders choom!");
             }
 
+            if (!message.isEmpty()) {
+                System.out.println("\n" + message);
+            }
+
+            System.out.print("\nEnter x to go back: ");
             input = scan.nextLine();
             if (input.equalsIgnoreCase("x")) {
+                message = "";
                 break;
+            } else {
+                message = "Invalid input!";
             }
         }
     }
