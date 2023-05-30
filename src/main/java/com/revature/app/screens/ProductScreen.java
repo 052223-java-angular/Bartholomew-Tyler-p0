@@ -100,6 +100,7 @@ public class ProductScreen implements IScreen {
                                 cartService.addProductToCart(cart.getId(), product.getId(), quantity);
                                 logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                                 message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
+                                canAddToCart = false;
                                 break;
                             }
 
@@ -126,6 +127,7 @@ public class ProductScreen implements IScreen {
                             quantity = (int) inputDouble;
 
                             cartService.addProductToCart(cart.getId(), product.getId(), quantity);
+                            canAddToCart = false;
                             logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                             message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                             break;
