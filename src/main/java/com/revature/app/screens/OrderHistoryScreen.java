@@ -3,6 +3,7 @@ package com.revature.app.screens;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import com.revature.app.utils.Session;
+import com.revature.app.utils.StringHelper;
 import com.revature.app.services.OrderService;
 import com.revature.app.services.RouterService;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +27,7 @@ public class OrderHistoryScreen implements IScreen {
     public void start(Scanner scan) {
         String input = "";
         String message = "";
+        String INVALID_INPUT_MSG = "Invalid input!";
 
         while (true) {
             clearScreen();
@@ -50,14 +52,31 @@ public class OrderHistoryScreen implements IScreen {
                 System.out.println("\n" + message);
             }
 
-            System.out.print("\nEnter x to go back: ");
+            System.out.print("\nEnter option to view order details (x to go back): ");
             input = scan.nextLine();
             if (input.equalsIgnoreCase("x")) {
                 message = "";
                 break;
-            } else {
-                message = "Invalid input!";
             }
+
+            if (!StringHelper.isNumeric(input)) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            double inputDouble = Double.parseDouble(input);
+
+            if (!StringHelper.isInteger(inputDouble)) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            if (inputDouble < 1 || orders.size() < inputDouble) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            routerService.navigate("/orderdetails", scan, orders.get((int) inputDouble - 1));
         }
     }
 

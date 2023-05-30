@@ -16,11 +16,13 @@ import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.ReviewsScreen;
 import com.revature.app.screens.LoginScreen;
 import com.revature.app.screens.MenuScreen;
+import com.revature.app.screens.OrderDetailScreen;
 import com.revature.app.screens.OrderHistoryScreen;
 import com.revature.app.screens.ProductScreen;
 import com.revature.app.screens.ProductSearchScreen;
 import com.revature.app.screens.CheckoutScreen;
 import com.revature.app.models.Cart;
+import com.revature.app.models.Order;
 
 import lombok.AllArgsConstructor;
 import javax.validation.Validation;
@@ -83,6 +85,16 @@ public class RouterService {
         switch (path) {
             case "/checkout":
                 new CheckoutScreen(this.getCartService(), cart, session, getOrderService()).start(scanner);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void navigate(String path, Scanner scanner, Order order) {
+        switch (path) {
+            case "/orderdetails":
+                new OrderDetailScreen(getProductService(), order).start(scanner);
                 break;
             default:
                 break;

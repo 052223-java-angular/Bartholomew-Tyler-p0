@@ -47,7 +47,7 @@ public class CheckoutScreen implements IScreen {
                     message = "Credit card number must valid!";
                     continue;
                 }
-                System.out.print("Enter your expiration date (MM/yy format): ");
+                System.out.print("Enter your expiration date (MM/YY format): ");
                 input = scan.nextLine();
                 if (!isExpirationDateValid(input)) {
                     message = "Invalid expiration date!";
@@ -80,7 +80,7 @@ public class CheckoutScreen implements IScreen {
     }
 
     public static boolean isExpirationDateValid(String expirationDate) {
-        // Define a regex pattern for MM/yy format
+        // Define a regex pattern for MM/YY format
         String pattern = "^(0[1-9]|1[0-2])/(\\d{2})$";
 
         // Check if the expiration date matches the pattern

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import com.revature.app.models.Order;
+import com.revature.app.models.OrderProduct;
 import com.revature.app.utils.ConnectionFactory;
 import java.io.IOError;
 import java.io.IOException;
@@ -48,10 +49,12 @@ public class OrderDAO implements CrudDAO<Order> {
             preparedStatement.setString(1, user_id);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                Order order = new Order(rs.getString("id"),
+                String orderId = rs.getString("id");
+                Order order = new Order(orderId,
                         user_id,
                         rs.getBigDecimal("amount"),
-                        rs.getTimestamp("created_at").toString());
+                        rs.getTimestamp("created_at").toString(),
+                        getOrderProductsByOrderId(orderId));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -64,6 +67,33 @@ public class OrderDAO implements CrudDAO<Order> {
             throw new RuntimeException(e.getMessage());
         }
         return orders;
+    }
+
+    private List<OrderProduct> getOrderProductsByOrderId(String orderId) {
+        List<OrderProduct> orderProducts = new ArrayList<OrderProduct>();
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
+            String sql = "select * from orderproducts where order_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, orderId);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                OrderProduct orderProduct = new OrderProduct(
+                        rs.getString("id"),
+                        orderId,
+                        rs.getString("product_id"),
+                        rs.getInt("quantity"));
+                orderProducts.add(orderProduct);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to connect to db");
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot find application.properties");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to load jdbc");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return orderProducts;
     }
 
     @Override
@@ -96,7 +126,7 @@ public class OrderDAO implements CrudDAO<Order> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        Order order = new Order(id, user_id, amount, null);
+        Order order = new Order(id, user_id, amount, null, getOrderProductsByOrderId(id));
         return order;
     }
 
