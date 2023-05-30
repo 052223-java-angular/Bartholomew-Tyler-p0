@@ -35,7 +35,7 @@ public class MenuScreen implements IScreen {
                 System.out.println("\n[1] Browse All Products");
                 System.out.println("[2] Search for Products");
                 System.out.println("[3] View Cart");
-                System.out.println("[4] View Your Previous Orders");
+                System.out.println("[4] View Previous Orders");
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();

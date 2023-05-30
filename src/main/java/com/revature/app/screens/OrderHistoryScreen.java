@@ -3,6 +3,7 @@ package com.revature.app.screens;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import com.revature.app.utils.Session;
+import com.revature.app.utils.StringHelper;
 import com.revature.app.services.OrderService;
 import com.revature.app.services.RouterService;
 import org.apache.logging.log4j.LogManager;
@@ -25,10 +26,14 @@ public class OrderHistoryScreen implements IScreen {
     @Override
     public void start(Scanner scan) {
         String input = "";
+        String message = "";
+        String INVALID_INPUT_MSG = "Invalid input!";
 
         while (true) {
             clearScreen();
-            System.out.println("View your previous orders here!");
+            System.out.println("Previous Orders");
+            System.out.println(
+                    "-----------------------------------------------------------------------------------------");
             List<Order> orders = orderService.getAllUsersOrders(session.getId());
             if (orders.size() > 0) {
                 System.out.printf("%5s %40s %15s %26s\n", "", "Order Id", "Amount", "Date");
@@ -36,17 +41,42 @@ public class OrderHistoryScreen implements IScreen {
                     Order order = orders.get(i);
                     System.out.printf("%5s %40s %15s %26s\n", "[" + (i + 1) + "]",
                             order.getId(),
-                            order.getAmount(),
+                            "$" + order.getAmount(),
                             order.getDate());
                 }
             } else {
                 System.out.println("You have no previous orders choom!");
             }
 
+            if (!message.isEmpty()) {
+                System.out.println("\n" + message);
+            }
+
+            System.out.print("\nEnter option to view order details (x to go back): ");
             input = scan.nextLine();
             if (input.equalsIgnoreCase("x")) {
+                message = "";
                 break;
             }
+
+            if (!StringHelper.isNumeric(input)) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            double inputDouble = Double.parseDouble(input);
+
+            if (!StringHelper.isInteger(inputDouble)) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            if (inputDouble < 1 || orders.size() < inputDouble) {
+                message = INVALID_INPUT_MSG;
+                continue;
+            }
+
+            routerService.navigate("/orderdetails", scan, orders.get((int) inputDouble - 1));
         }
     }
 

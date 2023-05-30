@@ -26,6 +26,9 @@ public class CartScreen implements IScreen {
     public void start(Scanner scan) {
         String input = "";
         String message = "";
+        int minimumQuantity = 0;
+        int maximumQuantity = 20;
+
         main: {
             while (true) {
                 logger.info("Navigated to CartScreen");
@@ -39,7 +42,6 @@ public class CartScreen implements IScreen {
                 System.out.println("\n[1] Edit product quantity");
                 System.out.println("[2] Checkout");
                 System.out.println("[x] Exit");
-                
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
@@ -58,9 +60,10 @@ public class CartScreen implements IScreen {
                         CartProduct cartProduct = cart.getCartProducts().get(productOption - 1);
                         input = getNumericInputWithinRange(scan,
                                 "\nChange quanity of " + cartProduct.getProduct().getName() + " from "
-                                        + cartProduct.getQuantity() + " to (x to go back): ",
-                                0,
-                                20);
+                                        + cartProduct.getQuantity() + " to (x to go back, min: " + minimumQuantity
+                                        + ", max: " + maximumQuantity + "): ",
+                                minimumQuantity,
+                                maximumQuantity);
 
                         if (input.equalsIgnoreCase("x")) {
                             message = "";
@@ -84,12 +87,11 @@ public class CartScreen implements IScreen {
                         message = cartProduct.getProduct().getName() + " quantity updated successfully.";
                         continue;
                     case "2":
-                        if(cart.getCartProducts().isEmpty()) {
+                        if (cart.getCartProducts().isEmpty()) {
                             logger.warn("Invalid input on CartScreen!");
                             message = "Cart is empty please add an item before checking out!";
                             continue;
-                        }
-                        else {
+                        } else {
                             logger.info("Navigating to checkout screen!");
                             routerService.navigate("/checkout", scan, cart);
                         }
