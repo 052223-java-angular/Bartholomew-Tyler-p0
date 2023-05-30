@@ -37,7 +37,9 @@ public class CartScreen implements IScreen {
                 }
 
                 System.out.println("\n[1] Edit product quantity");
+                System.out.println("[2] Checkout");
                 System.out.println("[x] Exit");
+                
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
@@ -81,6 +83,17 @@ public class CartScreen implements IScreen {
                                 + updatedQuantity);
                         message = cartProduct.getProduct().getName() + " quantity updated successfully.";
                         continue;
+                    case "2":
+                        if(cart.getCartProducts().isEmpty()) {
+                            logger.warn("Invalid input on CartScreen!");
+                            message = "Cart is empty please add an item before checking out!";
+                            continue;
+                        }
+                        else {
+                            logger.info("Navigating to checkout screen!");
+                            routerService.navigate("/checkout", scan, cart);
+                        }
+                        break;
                     case "x":
                         break main;
                     default:
