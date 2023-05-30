@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import lombok.AllArgsConstructor;
 
 import com.revature.app.services.CartService;
+import com.revature.app.services.RouterService;
 import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 import com.revature.app.models.Cart;
@@ -16,6 +17,7 @@ import com.revature.app.models.Product;
 
 @AllArgsConstructor
 public class ProductScreen implements IScreen {
+    private final RouterService routerService;
     private final CartService cartService;
     private final Product product;
     private final Session session;
@@ -135,6 +137,9 @@ public class ProductScreen implements IScreen {
                                 }
                             }
                         }
+                        break;
+                    case "r":
+                        routerService.navigate("/createreview", scan, product);
                         break;
                     case "x":
                         break main;

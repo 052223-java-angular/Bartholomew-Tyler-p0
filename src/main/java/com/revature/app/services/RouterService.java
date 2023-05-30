@@ -9,6 +9,7 @@ import com.revature.app.daos.UserDAO;
 import com.revature.app.models.Product;
 import com.revature.app.screens.BrowsingScreen;
 import com.revature.app.screens.CartScreen;
+import com.revature.app.screens.CreateReviewScreen;
 import com.revature.app.screens.HomeScreen;
 import com.revature.app.screens.RegisterScreen;
 import com.revature.app.screens.LoginScreen;
@@ -60,8 +61,11 @@ public class RouterService {
 
     public void navigate(String path, Scanner scanner, Product product) {
         switch (path) {
+            case "/createreview":
+                new CreateReviewScreen(this, product).start(scanner);
+                break;
             case "/product":
-                new ProductScreen(this.getCartService(), product, session).start(scanner);
+                new ProductScreen(this, this.getCartService(), product, session).start(scanner);
                 break;
             default:
                 break;
