@@ -39,74 +39,80 @@ public class CartScreen implements IScreen {
                     System.out.println(message);
                 }
 
-                System.out.println("\n[1] Edit product quantity");
-                System.out.println("[2] Checkout");
-                System.out.println("[x] Exit");
+                if (!cart.getCartProducts().isEmpty()) {
+                    System.out.println("\n[1] Edit product quantity");
+                    System.out.println("[2] Checkout");
+                    System.out.println("[x] Exit");
+                } else {
+                    System.out.println("\n[x] Exit");
+
+                }
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
 
-                switch (input.toLowerCase()) {
-                    case "1":
-                        if (cart.getCartProducts().isEmpty()) {
-                            logger.warn("Invalid input on CartScreen!");
-                            message = "Cart is empty, unable to edit product quantities!";
-                            continue;
-                        }
-                        printCart(cart, true);
-                        input = getNumericInputWithinRange(scan,
-                                "\nEnter product number to edit quantity (x to go back): ", 1,
-                                cart.getCartProducts().size());
-                        if (input.equalsIgnoreCase("x")) {
-                            message = "";
-                            continue;
-                        }
-                        int productOption = Integer.parseInt(input);
-                        CartProduct cartProduct = cart.getCartProducts().get(productOption - 1);
-                        input = getNumericInputWithinRange(scan,
-                                "\nChange quanity of " + cartProduct.getProduct().getName() + " from "
-                                        + cartProduct.getQuantity() + " to (x to go back, min: " + minimumQuantity
-                                        + ", max: " + maximumQuantity + "): ",
-                                minimumQuantity,
-                                maximumQuantity);
+                if (!cart.getCartProducts().isEmpty()) {
+                    switch (input.toLowerCase()) {
+                        case "1":
+                            printCart(cart, true);
+                            input = getNumericInputWithinRange(scan,
+                                    "\nEnter product number to edit quantity (x to go back): ", 1,
+                                    cart.getCartProducts().size());
+                            if (input.equalsIgnoreCase("x")) {
+                                message = "";
+                                continue;
+                            }
+                            int productOption = Integer.parseInt(input);
+                            CartProduct cartProduct = cart.getCartProducts().get(productOption - 1);
+                            input = getNumericInputWithinRange(scan,
+                                    "\nChange quanity of " + cartProduct.getProduct().getName() + " from "
+                                            + cartProduct.getQuantity() + " to (x to go back, min: " + minimumQuantity
+                                            + ", max: " + maximumQuantity + "): ",
+                                    minimumQuantity,
+                                    maximumQuantity);
 
-                        if (input.equalsIgnoreCase("x")) {
-                            message = "";
-                            continue;
-                        }
+                            if (input.equalsIgnoreCase("x")) {
+                                message = "";
+                                continue;
+                            }
 
-                        if (input.equalsIgnoreCase("0")) {
-                            cartService.removeProductFromCart(cart.getId(), cartProduct.getProduct().getId());
-                            logger.info(
-                                    "Removed " + cartProduct.getProduct().getName() + " from " + session.getUsername()
-                                            + "'s cart");
-                            message = cartProduct.getProduct().getName() + " removed successfully.";
-                            continue;
-                        }
+                            if (input.equalsIgnoreCase("0")) {
+                                cartService.removeProductFromCart(cart.getId(), cartProduct.getProduct().getId());
+                                logger.info(
+                                        "Removed " + cartProduct.getProduct().getName() + " from "
+                                                + session.getUsername()
+                                                + "'s cart");
+                                message = cartProduct.getProduct().getName() + " removed successfully.";
+                                continue;
+                            }
 
-                        int updatedQuantity = Integer.parseInt(input);
-                        cartService.updateQuantityOfProduct(cartProduct.getId(), updatedQuantity);
-                        logger.info("Updated quantity of " + cartProduct.getProduct().getName() + " in "
-                                + session.getUsername() + "'s cart from " + cartProduct.getQuantity() + " to "
-                                + updatedQuantity);
-                        message = cartProduct.getProduct().getName() + " quantity updated successfully.";
-                        continue;
-                    case "2":
-                        if (cart.getCartProducts().isEmpty()) {
-                            logger.warn("Invalid input on CartScreen!");
-                            message = "Cart is empty please add an item before checking out!";
+                            int updatedQuantity = Integer.parseInt(input);
+                            cartService.updateQuantityOfProduct(cartProduct.getId(), updatedQuantity);
+                            logger.info("Updated quantity of " + cartProduct.getProduct().getName() + " in "
+                                    + session.getUsername() + "'s cart from " + cartProduct.getQuantity() + " to "
+                                    + updatedQuantity);
+                            message = cartProduct.getProduct().getName() + " quantity updated successfully.";
                             continue;
-                        } else {
+                        case "2":
                             logger.info("Navigating to checkout screen!");
                             routerService.navigate("/checkout", scan, cart);
-                        }
-                        break;
-                    case "x":
-                        break main;
-                    default:
-                        logger.warn("Invalid input on CartScreen!");
-                        message = "Invalid input!";
-                        continue;
+                            break;
+                        case "x":
+                            break main;
+                        default:
+                            logger.warn("Invalid input on CartScreen!");
+                            message = "Invalid input!";
+                            continue;
+                    }
+                } else {
+                    switch (input.toLowerCase()) {
+                        case "x":
+                            break main;
+                        default:
+                            logger.warn("Invalid input on CartScreen!");
+                            message = "Invalid input!";
+                            continue;
+                    }
                 }
             }
         }
