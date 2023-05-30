@@ -39,4 +39,8 @@ public class UserService {
             return Optional.empty();
         }
     }
+
+    public User findById(String userId) {
+        return userDAO.findById(userId);
+    }
 }

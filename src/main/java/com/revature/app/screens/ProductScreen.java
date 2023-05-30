@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import lombok.AllArgsConstructor;
 
 import com.revature.app.services.CartService;
+import com.revature.app.services.ReviewService;
+import com.revature.app.services.RouterService;
 import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 import com.revature.app.models.Cart;
@@ -16,7 +18,9 @@ import com.revature.app.models.Product;
 
 @AllArgsConstructor
 public class ProductScreen implements IScreen {
+    private final RouterService routerService;
     private final CartService cartService;
+    private final ReviewService reviewService;
     private final Product product;
     private final Session session;
     private static final Logger logger = LogManager.getLogger(ProductScreen.class);
@@ -30,9 +34,12 @@ public class ProductScreen implements IScreen {
         String PRODUCT_ADDED_TO_CART_SUCCESS_MSG = "Item added to cart succesfully.";
         String PRODUCT_DELETED_FROM_CART_SUCCESS_MSG = "Item removed from cart succcessfully.";
         String INVALID_OPTION_MSG = "Invalid option!";
+        boolean canAddToCart = false;
+        boolean canLeaveReview = false;
 
         main: {
             while (true) {
+                canLeaveReview = reviewService.getByUserIdAndProductId(session.getId(), product.getId()).isEmpty();
                 logger.info("Navigated to ProductScreen");
                 Cart cart = cartService.getCartFromUserId(session.getId());
                 clearScreen();
@@ -41,13 +48,27 @@ public class ProductScreen implements IScreen {
                 System.out.println("Category: " + product.getCategory());
                 System.out.println("Price: $" + product.getPrice());
                 System.out.println("Description:");
-                wrapAndDisplay(product.getDescription());
+                StringHelper.wrapAndDisplay(product.getDescription());
                 System.out.println("\n------------------------------------------------------");
 
                 if (!productExistsInCart(product.getId(), cart)) {
-                    System.out.println("[r] Review this product - [a] Add to cart");
+                    canAddToCart = true;
+
+                    String options = "";
+                    if (canLeaveReview) {
+                        options = "[a] Add to cart\n[r] Review this product\n[v] View Reviews";
+                    } else {
+                        options = "[a] Add to cart\n[v] View Reviews";
+                    }
+                    System.out.println(options);
                 } else {
-                    System.out.println("[r] Review this product - [d] Delete from cart");
+                    String options = "";
+                    if (canLeaveReview) {
+                        options = "[d] Remove from cart\n[r] Review this product\n[v] View Reviews";
+                    } else {
+                        options = "[d] Remove from cart\n[v] View Reviews";
+                    }
+                    System.out.println(options);
                 }
 
                 if (!message.isEmpty()) {
@@ -59,6 +80,10 @@ public class ProductScreen implements IScreen {
 
                 switch (input.toLowerCase()) {
                     case "a":
+                        if (!canAddToCart) {
+                            message = "Product already in cart!";
+                            break;
+                        }
                         String addToCartMessage = "";
                         int quantity = 1;
                         while (true) {
@@ -76,6 +101,7 @@ public class ProductScreen implements IScreen {
                                 cartService.addProductToCart(cart.getId(), product.getId(), quantity);
                                 logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                                 message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
+                                canAddToCart = false;
                                 break;
                             }
 
@@ -102,12 +128,17 @@ public class ProductScreen implements IScreen {
                             quantity = (int) inputDouble;
 
                             cartService.addProductToCart(cart.getId(), product.getId(), quantity);
+                            canAddToCart = false;
                             logger.info("Added " + product.getName() + " to " + session.getUsername() + "'s cart");
                             message = PRODUCT_ADDED_TO_CART_SUCCESS_MSG;
                             break;
                         }
                         break;
                     case "d":
+                        if (canAddToCart) {
+                            message = "Product not in cart!";
+                            break;
+                        }
                         String deleteFromCartMessage = "";
                         deleteFromCart: {
                             while (true) {
@@ -136,6 +167,12 @@ public class ProductScreen implements IScreen {
                             }
                         }
                         break;
+                    case "r":
+                        routerService.navigate("/createreview", scan, product);
+                        break;
+                    case "v":
+                        routerService.navigate("/reviews", scan, product);
+                        break;
                     case "x":
                         break main;
                     default:
@@ -144,38 +181,6 @@ public class ProductScreen implements IScreen {
                 }
             }
         }
-    }
-
-    // method for wrapping description text in a next and orderly way
-    public static void wrapAndDisplay(String text) {
-        int maxLineLength = 60; // Maximum line length for description
-
-        // Wrap the text
-        StringBuilder wrappedText = new StringBuilder();
-        int currentIndex = 0;
-        while (currentIndex < text.length()) {
-            if (currentIndex + maxLineLength < text.length()) {
-                // Find the last space within the line length
-                int lastSpaceIndex = text.lastIndexOf(' ', currentIndex + maxLineLength);
-
-                if (lastSpaceIndex != -1 && lastSpaceIndex > currentIndex) {
-                    wrappedText.append(text, currentIndex, lastSpaceIndex);
-                    wrappedText.append(System.lineSeparator());
-                    currentIndex = lastSpaceIndex + 1;
-                } else {
-                    // If no space is found, break the line at the line length
-                    wrappedText.append(text, currentIndex, currentIndex + maxLineLength);
-                    wrappedText.append(System.lineSeparator());
-                    currentIndex += maxLineLength;
-                }
-            } else {
-                // Add the remaining part of the text
-                wrappedText.append(text.substring(currentIndex));
-                currentIndex = text.length();
-            }
-        }
-
-        System.out.print(wrappedText);
     }
 
     private void clearScreen() {

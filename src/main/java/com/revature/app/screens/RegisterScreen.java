@@ -99,6 +99,10 @@ public class RegisterScreen implements IScreen {
             System.out.print("\nEnter a password: ");
             password = scan.nextLine();
 
+            if (password.equalsIgnoreCase("x")) {
+                return "x";
+            }
+
             Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User("", password),
                     "password");
 
