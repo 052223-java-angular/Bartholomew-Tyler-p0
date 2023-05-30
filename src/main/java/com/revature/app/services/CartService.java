@@ -3,6 +3,7 @@ package com.revature.app.services;
 import com.revature.app.daos.CartDAO;
 import com.revature.app.models.Cart;
 import com.revature.app.models.User;
+import com.revature.app.models.CartProduct;
 
 import lombok.AllArgsConstructor;
 
@@ -29,4 +30,6 @@ public class CartService {
     public void updateQuantityOfProduct(String cartProductId, int updatedQuantity) {
         cartDAO.updateQuantityOfProduct(cartProductId, updatedQuantity);
     }
+
+
 }
