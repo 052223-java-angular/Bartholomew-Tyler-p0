@@ -95,7 +95,7 @@ public class OrderDAO implements CrudDAO<Order> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        Order order = new Order(user_id, user_id, amount, date);
+        Order order = new Order(id, user_id, amount, date);
         return order;
     }
 
