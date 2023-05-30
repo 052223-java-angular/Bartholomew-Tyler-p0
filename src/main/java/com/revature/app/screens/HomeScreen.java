@@ -30,7 +30,6 @@ public class HomeScreen implements IScreen {
                 }
 
                 System.out.println("Welcome!");
-                System.out.println("To exit any screen at any point, enter x");
                 System.out.println("\n[1] Register");
                 System.out.println("[2] Login");
                 System.out.println("[x] Exit");

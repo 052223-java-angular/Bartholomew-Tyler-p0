@@ -3,12 +3,8 @@ package com.revature.app.screens;
 import lombok.AllArgsConstructor;
 import java.util.Scanner;
 import com.revature.app.models.Cart;
-import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 import com.revature.app.services.CartService;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 import com.revature.app.services.OrderService;
 import com.revature.app.models.Order;
@@ -19,7 +15,6 @@ import com.revature.app.models.CartProduct;
 public class CheckoutScreen implements IScreen {
     private final CartService cartService;
     private final Cart cart;
-    private final Session session;
     private final OrderService orderService;
 
     // String input = "";

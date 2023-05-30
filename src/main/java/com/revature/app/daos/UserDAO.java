@@ -15,15 +15,13 @@ public class UserDAO implements CrudDAO<User> {
 
     @Override
     public void save(User obj) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, obj.getId());
-                ps.setString(2, obj.getUsername());
-                ps.setString(3, obj.getPassword());
-                ps.executeUpdate();
-            }
-
+        String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, obj.getId());
+            ps.setString(2, obj.getUsername());
+            ps.setString(3, obj.getPassword());
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
         } catch (IOException e) {
@@ -33,7 +31,6 @@ public class UserDAO implements CrudDAO<User> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 
     @Override
@@ -50,25 +47,21 @@ public class UserDAO implements CrudDAO<User> {
 
     @Override
     public User findById(String id) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "SELECT * FROM users WHERE id = ?";
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                // Set the username parameter for the prepared statement
-                ps.setString(1, id);
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        // Create a new User object and populate it with data from the result set
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setUsername(rs.getString("username"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Set the username parameter for the prepared statement
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Create a new User object and populate it with data from the result set
+                    User user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    return user;
                 }
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to the database", e);
         } catch (IOException e) {
@@ -76,30 +69,27 @@ public class UserDAO implements CrudDAO<User> {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Unable to load JDBC driver", e);
         }
-
         return null;
     }
 
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, username);
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        // Create a new User object and populate it with data from the result set
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setUsername(rs.getString("username"));
-                        user.setPassword(rs.getString("password"));
-                        return Optional.of(user);
-                    }
-                    return Optional.empty();
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Create a new User object and populate it with data from the result set
+                    User user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    return Optional.of(user);
                 }
-
+                return Optional.empty();
+            } catch (SQLException e) {
+                throw new RuntimeException("Unable to connect to the database", e);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
         } catch (IOException e) {
@@ -118,25 +108,23 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     public Optional<User> findByUsername(String username) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ?";
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                // Set the username parameter for the prepared statement
-                ps.setString(1, username);
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        // Create a new User object and populate it with data from the result set
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setUsername(rs.getString("username"));
-                        user.setPassword(rs.getString("password"));
-                        return Optional.of(user);
-                    }
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Set the username parameter for the prepared statement
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Create a new User object and populate it with data from the result set
+                    User user = new User();
+                    user.setId(rs.getString("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("password"));
+                    return Optional.of(user);
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException("Unable to connect to the database", e);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to the database", e);
         } catch (IOException e) {

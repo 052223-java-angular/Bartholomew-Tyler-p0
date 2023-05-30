@@ -84,7 +84,7 @@ public class RouterService {
     public void navigate(String path, Scanner scanner, Cart cart) {
         switch (path) {
             case "/checkout":
-                new CheckoutScreen(this.getCartService(), cart, session, getOrderService()).start(scanner);
+                new CheckoutScreen(this.getCartService(), cart, getOrderService()).start(scanner);
                 break;
             default:
                 break;

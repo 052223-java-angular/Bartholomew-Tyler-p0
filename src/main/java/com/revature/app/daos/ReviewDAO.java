@@ -17,9 +17,9 @@ public class ReviewDAO implements CrudDAO<Review> {
 
     @Override
     public void save(Review review) {
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "INSERT INTO reviews(id, rating, comment, user_id, product_id) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "INSERT INTO reviews(id, rating, comment, user_id, product_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, UUID.randomUUID().toString());
             preparedStatement.setInt(2, review.getRating());
             preparedStatement.setString(3, review.getComment());
@@ -63,19 +63,20 @@ public class ReviewDAO implements CrudDAO<Review> {
 
     public List<Review> getReviewsByProductId(String productId) {
         List<Review> reviews = new ArrayList<>();
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "SELECT * FROM reviews WHERE product_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM reviews WHERE product_id = ?";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, productId);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                Review review = new Review(
-                        rs.getString("id"),
-                        rs.getInt("rating"),
-                        rs.getString("comment"),
-                        rs.getString("user_id"),
-                        rs.getString("product_id"));
-                reviews.add(review);
+            try (ResultSet rs = preparedStatement.executeQuery();) {
+                while (rs.next()) {
+                    Review review = new Review(
+                            rs.getString("id"),
+                            rs.getInt("rating"),
+                            rs.getString("comment"),
+                            rs.getString("user_id"),
+                            rs.getString("product_id"));
+                    reviews.add(review);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
@@ -86,29 +87,27 @@ public class ReviewDAO implements CrudDAO<Review> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
         return reviews;
     }
 
     public Optional<Review> getByUserIdAndProductId(String userId, String productId) {
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "SELECT * FROM reviews WHERE user_id = ? and product_id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, userId);
-                ps.setString(2, productId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        // Create a new User object and populate it with data from the result set
-                        Review review = new Review(
-                                rs.getString("id"),
-                                rs.getInt("rating"),
-                                rs.getString("comment"),
-                                rs.getString("user_id"),
-                                rs.getString("product_id"));
-                        return Optional.of(review);
-                    }
-                    return Optional.empty();
+        String sql = "SELECT * FROM reviews WHERE user_id = ? and product_id = ?";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ps.setString(2, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Create a new User object and populate it with data from the result set
+                    Review review = new Review(
+                            rs.getString("id"),
+                            rs.getInt("rating"),
+                            rs.getString("comment"),
+                            rs.getString("user_id"),
+                            rs.getString("product_id"));
+                    return Optional.of(review);
                 }
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
