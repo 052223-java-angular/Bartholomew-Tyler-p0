@@ -26,16 +26,16 @@ public class MenuScreen implements IScreen {
             while (true) {
                 logger.info("Navigated to MenuScreen");
                 clearScreen();
-                System.out.println("Welcome to the menu screen, " + session.getUsername() + "!");
+                System.out.println("Welcome, " + session.getUsername() + "!");
 
                 if (!error.isBlank()) {
                     System.out.println(error);
                 }
-                System.out.println("Press x to logout and go back to the login screen");
                 System.out.println("\n[1] Browse All Products");
                 System.out.println("[2] Search for Products");
                 System.out.println("[3] View Cart");
                 System.out.println("[4] View Previous Orders");
+                System.out.println("[x] Logout");
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
@@ -61,7 +61,6 @@ public class MenuScreen implements IScreen {
                         logger.info("Exiting MenuScreen");
                         error = "";
                         session.clearSession();
-                        routerService.navigate("/home", scan);
                         break exit;
                     default:
                         logger.warn("Invalid input on MenuScreen!");

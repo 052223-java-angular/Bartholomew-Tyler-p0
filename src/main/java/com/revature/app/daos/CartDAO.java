@@ -23,9 +23,9 @@ public class CartDAO implements CrudDAO<Cart> {
 
     @Override
     public void save(Cart cart) {
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "INSERT INTO carts(id, user_id) VALUES (?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "INSERT INTO carts(id, user_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, UUID.randomUUID().toString());
             preparedStatement.setString(2, cart.getUser().getId());
             preparedStatement.executeUpdate();
@@ -66,19 +66,19 @@ public class CartDAO implements CrudDAO<Cart> {
 
     public List<CartProduct> getCartProductsFromCartId(String cartId) {
         List<CartProduct> cartProducts = new ArrayList<>();
-
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "SELECT * FROM cartproducts WHERE cart_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM cartproducts WHERE cart_id = ?";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, cartId);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                CartProduct cartProduct = new CartProduct(
-                        rs.getString("id"),
-                        cartId,
-                        productDAO.findById(rs.getString("product_id")),
-                        rs.getInt("quantity"));
-                cartProducts.add(cartProduct);
+            try (ResultSet rs = preparedStatement.executeQuery();) {
+                while (rs.next()) {
+                    CartProduct cartProduct = new CartProduct(
+                            rs.getString("id"),
+                            cartId,
+                            productDAO.findById(rs.getString("product_id")),
+                            rs.getInt("quantity"));
+                    cartProducts.add(cartProduct);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
@@ -94,17 +94,18 @@ public class CartDAO implements CrudDAO<Cart> {
 
     public Cart getCartFromUserId(String userId) {
         User user = userDAO.findById(userId);
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "SELECT * FROM carts WHERE user_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM carts WHERE user_id = ?";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, userId);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                Cart cart = new Cart(
-                        rs.getString("id"),
-                        user,
-                        getCartProductsFromCartId(rs.getString("id")));
-                return cart;
+            try (ResultSet rs = preparedStatement.executeQuery();) {
+                if (rs.next()) {
+                    Cart cart = new Cart(
+                            rs.getString("id"),
+                            user,
+                            getCartProductsFromCartId(rs.getString("id")));
+                    return cart;
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");
@@ -119,9 +120,9 @@ public class CartDAO implements CrudDAO<Cart> {
     }
 
     public void addProductToCart(String cartId, String productId, int quantity) {
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "INSERT INTO cartproducts(id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "INSERT INTO cartproducts(id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, UUID.randomUUID().toString());
             preparedStatement.setString(2, cartId);
             preparedStatement.setString(3, productId);
@@ -139,9 +140,9 @@ public class CartDAO implements CrudDAO<Cart> {
     }
 
     public void removeProductFromCart(String cartId, String productId) {
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "DELETE FROM cartproducts WHERE cart_id = ? and product_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "DELETE FROM cartproducts WHERE cart_id = ? and product_id = ?";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, cartId);
             preparedStatement.setString(2, productId);
             preparedStatement.executeUpdate();
@@ -157,9 +158,9 @@ public class CartDAO implements CrudDAO<Cart> {
     }
 
     public void updateQuantityOfProduct(String cartProductId, int updatedQuantity) {
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();) {
-            String sql = "UPDATE cartproducts SET quantity = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String sql = "UPDATE cartproducts SET quantity = ? WHERE id = ?";
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setInt(1, updatedQuantity);
             preparedStatement.setString(2, cartProductId);
             preparedStatement.executeUpdate();

@@ -54,6 +54,7 @@ public class LoginScreen implements IScreen {
                 }
                 session.setSession(user.get());
                 routerService.navigate("/menu", scan);
+                break;
             }
         }
     }
@@ -61,7 +62,7 @@ public class LoginScreen implements IScreen {
     public String getUsername(Scanner scan) {
         String username = "";
         while (true) {
-            System.out.print("\nEnter a username: ");
+            System.out.print("\nEnter a username (x to go back): ");
             username = scan.nextLine();
             if (username.equalsIgnoreCase("x")) {
                 return "x";
@@ -75,7 +76,7 @@ public class LoginScreen implements IScreen {
     public String getPassword(Scanner scan) {
         String password = "";
         while (true) {
-            System.out.print("\nEnter your password: ");
+            System.out.print("Enter your password (x to go back): ");
             password = scan.nextLine();
             if (password.equalsIgnoreCase("x")) {
                 return "x";

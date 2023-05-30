@@ -62,7 +62,7 @@ public class RegisterScreen implements IScreen {
     public String getUsername(Scanner scan) {
         String username = "";
         while (true) {
-            System.out.print("\nEnter a username: ");
+            System.out.print("\nEnter a username (x to go back): ");
             username = scan.nextLine();
 
             if (username.equalsIgnoreCase("x")) {
@@ -96,7 +96,7 @@ public class RegisterScreen implements IScreen {
         String password = "";
         String confirmPassword = "";
         while (true) {
-            System.out.print("\nEnter a password: ");
+            System.out.print("\nEnter a password (x to go back): ");
             password = scan.nextLine();
 
             if (password.equalsIgnoreCase("x")) {
@@ -114,8 +114,12 @@ public class RegisterScreen implements IScreen {
                 continue;
             }
 
-            System.out.print("\nPlease confirm your password: ");
+            System.out.print("\nPlease confirm your password (x to go back): ");
             confirmPassword = scan.nextLine();
+
+            if (confirmPassword.equalsIgnoreCase("x")) {
+                return "x";
+            }
 
             if (!password.equals(confirmPassword)) {
                 logger.warn("Not matching passwords!");

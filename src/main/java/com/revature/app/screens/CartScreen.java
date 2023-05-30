@@ -48,6 +48,11 @@ public class CartScreen implements IScreen {
 
                 switch (input.toLowerCase()) {
                     case "1":
+                        if (cart.getCartProducts().isEmpty()) {
+                            logger.warn("Invalid input on CartScreen!");
+                            message = "Cart is empty, unable to edit product quantities!";
+                            continue;
+                        }
                         printCart(cart, true);
                         input = getNumericInputWithinRange(scan,
                                 "\nEnter product number to edit quantity (x to go back): ", 1,
