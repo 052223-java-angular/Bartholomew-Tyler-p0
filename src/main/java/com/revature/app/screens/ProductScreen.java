@@ -35,10 +35,11 @@ public class ProductScreen implements IScreen {
         String PRODUCT_DELETED_FROM_CART_SUCCESS_MSG = "Item removed from cart succcessfully.";
         String INVALID_OPTION_MSG = "Invalid option!";
         boolean canAddToCart = false;
-        boolean canLeaveReview = reviewService.getByUserIdAndProductId(session.getId(), product.getId()).isEmpty();
+        boolean canLeaveReview = false;
 
         main: {
             while (true) {
+                canLeaveReview = reviewService.getByUserIdAndProductId(session.getId(), product.getId()).isEmpty();
                 logger.info("Navigated to ProductScreen");
                 Cart cart = cartService.getCartFromUserId(session.getId());
                 clearScreen();
