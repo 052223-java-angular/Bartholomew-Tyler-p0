@@ -2,6 +2,7 @@ package com.revature.app.daos;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Date;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,9 +49,9 @@ public class OrderDAO implements CrudDAO<Order> {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Order order = new Order(rs.getString("id"),
-                        rs.getString("name"),
+                        user_id,
                         rs.getBigDecimal("amount"),
-                        rs.getString("date"));
+                        rs.getTimestamp("created_at").toString());
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -71,23 +72,23 @@ public class OrderDAO implements CrudDAO<Order> {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
-    public Order save(String user_id, String date, BigDecimal amount) {
+    public Order save(String user_id, BigDecimal amount) {
         String id = UUID.randomUUID().toString();
+        String date;
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = "INSERT INTO orders (id, user_id, amount) VALUES (?,?,?)";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, id);
                 ps.setString(2, user_id);
-                // ps.setString(3, date);
                 ps.setBigDecimal(3, amount);
                 ps.executeUpdate();
-                
-            }
-            
 
+                // ResultSet rs = ps.getResultSet();
+                // date = rs.getDate("created_at").toString();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
-            
+
         } catch (IOException e) {
             throw new RuntimeException("Cannot find application.properties");
         } catch (ClassNotFoundException e) {
@@ -95,7 +96,7 @@ public class OrderDAO implements CrudDAO<Order> {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        Order order = new Order(user_id, user_id, amount, date);
+        Order order = new Order(id, user_id, amount, null);
         return order;
     }
 
@@ -109,7 +110,7 @@ public class OrderDAO implements CrudDAO<Order> {
                 ps.setString(3, product_id);
                 ps.setInt(4, quantity);
                 ps.executeUpdate();
-                
+
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to connect to db");

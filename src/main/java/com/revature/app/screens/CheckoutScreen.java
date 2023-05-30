@@ -1,4 +1,5 @@
 package com.revature.app.screens;
+
 import lombok.AllArgsConstructor;
 import java.util.Scanner;
 import com.revature.app.models.Cart;
@@ -27,16 +28,16 @@ public class CheckoutScreen implements IScreen {
         String input = "";
         String message = "";
         exit: {
-            while(true) {
+            while (true) {
                 clearScreen();
                 System.out.println("Welcome to the checkout screen!");
                 System.out.println(message);
-                System.out.print("Enter your credit card number:");
+                System.out.print("Enter your credit card number: ");
                 input = scan.nextLine();
-                if(input.equalsIgnoreCase("x")) {
+                if (input.equalsIgnoreCase("x")) {
                     break exit;
                 }
-                if(!StringHelper.isNumeric(input)) {
+                if (!StringHelper.isNumeric(input)) {
                     // System.out.print("Credit card number must valid!");
                     message = "Credit card number must valid!";
                     continue;
@@ -46,19 +47,19 @@ public class CheckoutScreen implements IScreen {
                     message = "Credit card number must valid!";
                     continue;
                 }
-                System.out.print("Enter your expiration date (MM/yy format):");
+                System.out.print("Enter your expiration date (MM/yy format): ");
                 input = scan.nextLine();
-                if(!isExpirationDateValid(input)) {
+                if (!isExpirationDateValid(input)) {
                     message = "Invalid expiration date!";
                     continue;
                 }
-                System.out.print("Enter your card's three or four digit CVV number:");
+                System.out.print("Enter your card's three or four digit CVV number: ");
                 input = scan.nextLine();
-                if(!StringHelper.isNumeric(input)) {
+                if (!StringHelper.isNumeric(input)) {
                     message = "CVV number must be valid!";
                     continue;
                 }
-                if(!(input.length() == 3 || input.length() == 4)) {
+                if (!(input.length() == 3 || input.length() == 4)) {
                     message = "CVV number must be valid!";
                     continue;
                 }
@@ -67,14 +68,11 @@ public class CheckoutScreen implements IScreen {
                 orderService.createOrderProducts(order_id, cart);
                 clearCart(cart);
                 message = "Processing order....";
-                wait(5000);
                 break exit;
             }
         }
-        
-        
+
     }
-    
 
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
@@ -82,37 +80,34 @@ public class CheckoutScreen implements IScreen {
     }
 
     public static boolean isExpirationDateValid(String expirationDate) {
-                // Define a regex pattern for MM/yy format
-                String pattern = "^(0[1-9]|1[0-2])/(\\d{2})$";
+        // Define a regex pattern for MM/yy format
+        String pattern = "^(0[1-9]|1[0-2])/(\\d{2})$";
 
-                // Check if the expiration date matches the pattern
-                if (!Pattern.matches(pattern, expirationDate)) {
-                    return false; // Invalid format
-                }
-        
-                // Extract month and year from the expiration date
-                String[] parts = expirationDate.split("/");
-                int month = Integer.parseInt(parts[0]);
-                int year = Integer.parseInt(parts[1]);
-        
-                // Perform additional checks for month and year values
-                if (month < 1 || month > 12) {
-                    return false; // Invalid month
-                }
-        
-                int currentYear = java.time.Year.now().getValue() % 100; // Get the current two-digit year
-        
-                if (year < currentYear || (year == currentYear && month < java.time.MonthDay.now().getMonthValue())) {
-                    return false; // Expired date
-                }
-        
-                // All checks passed, expiration date is valid
-                return true;
-            }
-        
+        // Check if the expiration date matches the pattern
+        if (!Pattern.matches(pattern, expirationDate)) {
+            return false; // Invalid format
+        }
 
-    
-    
+        // Extract month and year from the expiration date
+        String[] parts = expirationDate.split("/");
+        int month = Integer.parseInt(parts[0]);
+        int year = Integer.parseInt(parts[1]);
+
+        // Perform additional checks for month and year values
+        if (month < 1 || month > 12) {
+            return false; // Invalid month
+        }
+
+        int currentYear = java.time.Year.now().getValue() % 100; // Get the current two-digit year
+
+        if (year < currentYear || (year == currentYear && month < java.time.MonthDay.now().getMonthValue())) {
+            return false; // Expired date
+        }
+
+        // All checks passed, expiration date is valid
+        return true;
+    }
+
     public static boolean isCardValid(String cardNumber) {
         if (cardNumber.length() != 16) {
             return false;
@@ -129,15 +124,11 @@ public class CheckoutScreen implements IScreen {
         }
     }
 
-    public static void wait(int ms)
-{
-    try
-    {
-        Thread.sleep(ms);
+    public static void wait(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
-    catch(InterruptedException ex)
-    {
-        Thread.currentThread().interrupt();
-    }
-}
 }
