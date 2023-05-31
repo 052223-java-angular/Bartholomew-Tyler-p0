@@ -211,8 +211,8 @@ public class CartDAO implements CrudDAO<Cart> {
     /**
      * Updates the quantity of the amount of a Product within a Cart
      *
-     * @param cartProductId   the id of the cart object
-     * @param updatedQuantity the id of the product object
+     * @param cartProductId   the id of the Cart
+     * @param updatedQuantity the id of the Product
      */
     public void updateQuantityOfProduct(String cartProductId, int updatedQuantity) {
         String sql = "UPDATE cartproducts SET quantity = ? WHERE id = ?";
