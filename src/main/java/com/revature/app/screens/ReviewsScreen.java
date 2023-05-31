@@ -80,6 +80,7 @@ public class ReviewsScreen implements IScreen {
         System.out.println("👤 " + user.getUsername());
         System.out.println(getStarString(review.getRating()));
         StringHelper.wrapAndDisplay(review.getComment());
+        System.out.println();
     }
 
     // Displays the star rating of the review in the printReview method
