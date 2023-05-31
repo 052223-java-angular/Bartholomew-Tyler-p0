@@ -76,7 +76,7 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE LOWER(username) = LOWER(?)";
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
@@ -111,7 +111,7 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     public Optional<User> findByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE LOWER(username) = LOWER(?)";
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             // Set the username parameter for the prepared statement
