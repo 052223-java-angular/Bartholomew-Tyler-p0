@@ -22,7 +22,7 @@ public class OrderHistoryScreen implements IScreen {
     private OrderService orderService;
     private Session session;
 
-    private static final Logger logger = LogManager.getLogger(MenuScreen.class);
+    private static final Logger logger = LogManager.getLogger(OrderHistoryScreen.class);
 
     public OrderHistoryScreen(Session session) {
         this.session = session;
