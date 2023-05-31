@@ -8,7 +8,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
-
+import org.mindrot.jbcrypt.BCrypt;
 import com.revature.app.models.User;
 import com.revature.app.daos.UserDAO;
 
@@ -55,15 +55,25 @@ public class UserServiceTest {
     //Test to see that an unsuccessful login will return an empty user object
     @Test
         public void testLogin() {
-
-            String badusername = "joker11";
-            String badpassword = "batman11";
-
-            Optional <User> baduser = userService.login(badusername, badpassword);
-
-            assertTrue(baduser.isEmpty());
-            
+            String id = "1";
+            String username = "joker11";
+            String password = "batman11";
+            String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+            User user = new User(id, username, hashed);
+            when(userService.login(username, hashed)).thenReturn(Optional.of(user));
+            Optional<User> returnedUser = userService.login("joker11", "batman11");
+            assertTrue(returnedUser.equals(Optional.of(user)));
         }
 
+    @Test
+        public void testGetUserId() {
+            String id = "1";
+            String username = "testname11";
+            String password = "password12";
 
+            User user = new User(id, username, password);
+            when(userService.findById("1")).thenReturn(user);
+            User returnedUser = userService.findById("1");
+            assertTrue(returnedUser.equals(user));
+        }
 }
