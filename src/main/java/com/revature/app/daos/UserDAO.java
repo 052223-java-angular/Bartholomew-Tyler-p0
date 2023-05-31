@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 public class UserDAO implements CrudDAO<User> {
     /**
-    * The UserDAO class handles setting up the sql querys related to CRUD actions
-    * related to the User model. It implements the CrudDAO interface.
-    */
+     * The UserDAO class handles setting up the sql querys related to CRUD actions
+     * related to the User model. It implements the CrudDAO interface.
+     */
     @Override
     public void save(User obj) {
         String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";

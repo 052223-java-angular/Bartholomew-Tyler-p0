@@ -10,10 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.Scanner;
 import com.revature.app.models.Order;
+
 /**
-* The OrderHistoryScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The OrderHistoryScreen class handles what information is presented to the
+ * user when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class OrderHistoryScreen implements IScreen {
     private RouterService routerService;

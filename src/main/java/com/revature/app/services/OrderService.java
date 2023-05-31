@@ -7,19 +7,24 @@ import java.util.List;
 import com.revature.app.models.Cart;
 import com.revature.app.models.CartProduct;
 import java.math.BigDecimal;
+
 /**
-* The OrderService class handles the buisness logic behind actions regarding 
-* orders
-*/
+ * The OrderService class handles the buisness logic behind actions regarding
+ * orders
+ */
 @AllArgsConstructor
 public class OrderService {
     private final OrderDAO orderDAO;
-    // getAllUsersOrders method returns a list of all of the orders whose user_id value
+
+    // getAllUsersOrders method returns a list of all of the orders whose user_id
+    // value
     // matches the user_id parameter
     public List<Order> getAllUsersOrders(String user_id) {
         return orderDAO.findUsersOrders(user_id);
     }
-    // createNewOrder creates a new order by taking all of the cartproducts from the cart parameter
+
+    // createNewOrder creates a new order by taking all of the cartproducts from the
+    // cart parameter
     // and obtains it's amount value
     public Order createNewOrder(Cart cart) {
         String user_id = cart.getUser().getId();
@@ -33,8 +38,11 @@ public class OrderService {
         return orderDAO.save(user_id, amount);
 
     }
-    // createOrderProducts transcribes all of a cart's cartproducts and creates copies of them
-    // in the form of orderproducts which are associated with the order_id of the order
+
+    // createOrderProducts transcribes all of a cart's cartproducts and creates
+    // copies of them
+    // in the form of orderproducts which are associated with the order_id of the
+    // order
     // that is passed as a parameter
     public void createOrderProducts(String order_id, Cart cart) {
         List<CartProduct> cartProducts = cart.getCartProducts();

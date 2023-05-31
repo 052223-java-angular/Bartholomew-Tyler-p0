@@ -10,10 +10,12 @@ import com.revature.app.models.Product;
 import com.revature.app.services.ProductService;
 
 import lombok.AllArgsConstructor;
+
 /**
-* The OrderDetailScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The OrderDetailScreen class handles what information is presented to the user
+ * when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class OrderDetailScreen implements IScreen {
     ProductService productService;

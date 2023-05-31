@@ -9,10 +9,12 @@ import com.revature.app.services.RouterService;
 import com.revature.app.services.UserService;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+
 /**
-* The ProductSearchScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The ProductSearchScreen class handles what information is presented to the
+ * user when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class LoginScreen implements IScreen {
     private final RouterService routerService;
