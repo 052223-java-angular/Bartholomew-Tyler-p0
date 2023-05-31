@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -40,4 +40,23 @@ public class UserServiceTest {
         verify(userDao, times(1)).save(any(User.class));
         assertEquals(username, result.getUsername());
     }
+
+    @Test
+    public void testisUniqueUsername() {
+        String username = "testUser12";
+        String password = "password11";
+        String username2 = "testUser12";
+        
+        userService.register(username, password);
+    
+        assertFalse(userService.isUniqueUsername(username2));
+
+    }
+
+    @Test
+        public void testFindById() {
+
+        }
+
+
 }
