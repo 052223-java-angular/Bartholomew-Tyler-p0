@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 public class UserDAO implements CrudDAO<User> {
     /**
-    * The UserDAO class handles setting up the sql querys related to CRUD actions
-    * related to the User model. It implements the CrudDAO interface.
-    */
+     * The UserDAO class handles setting up the sql querys related to CRUD actions
+     * related to the User model. It implements the CrudDAO interface.
+     */
     @Override
     public void save(User obj) {
         String sql = "INSERT INTO users (id, username, password) VALUES (?,?,?)";
@@ -76,7 +76,7 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     public Optional<User> findByUsernameAndPassword(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE LOWER(username) = LOWER(?)";
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
@@ -111,7 +111,7 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     public Optional<User> findByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE LOWER(username) = LOWER(?)";
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             // Set the username parameter for the prepared statement

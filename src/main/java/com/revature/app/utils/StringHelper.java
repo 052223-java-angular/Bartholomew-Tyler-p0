@@ -1,14 +1,17 @@
 package com.revature.app.utils;
+
 /**
-* StringHelper class holds a number of methods to assist in manipulating or reading
-* strings throughout the program.
-*/
+ * StringHelper class holds a number of methods to assist in manipulating or
+ * reading
+ * strings throughout the program.
+ */
 public class StringHelper {
-    /** 
-    *   isNumeric is a method that ta check if a String is
-    *   a number
-    *    @param str string to be checked
-    */
+    /**
+     * isNumeric is a method that ta check if a String is
+     * a number
+     * 
+     * @param str string to be checked
+     */
     public static boolean isNumeric(String str) {
         try {
             Double.parseDouble(str);
@@ -19,18 +22,20 @@ public class StringHelper {
     }
 
     /**
-    * isInteger is a method to check if a double is actually an integer.
-    * @param d double to be checked
-    */
+     * isInteger is a method to check if a double is actually an integer.
+     * 
+     * @param d double to be checked
+     */
     public static boolean isInteger(double d) {
         return Math.floor(d) == d;
     }
 
     /**
-    * Given how long some of the descriptions can be, wrapAndDisplay
-    * allows a description to be presented to the user in a neat way
-    * @param text The string of text to be manipulated
-    */
+     * Given how long some of the descriptions can be, wrapAndDisplay
+     * allows a description to be presented to the user in a neat way
+     * 
+     * @param text The string of text to be manipulated
+     */
     public static void wrapAndDisplay(String text) {
         int maxLineLength = 60; // Maximum line length for description
 

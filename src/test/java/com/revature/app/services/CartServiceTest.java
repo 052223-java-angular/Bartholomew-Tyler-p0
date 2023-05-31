@@ -17,34 +17,36 @@ import org.mockito.MockitoAnnotations;
 import com.revature.app.daos.CartDAO;
 import com.revature.app.models.Cart;
 import com.revature.app.models.User;
-    /**
-     * This is the CartServiceTest class, it contains
-     * the methods necessary to test CartService methods
-    */
+
+/**
+ * This is the CartServiceTest class, it contains
+ * the methods necessary to test CartService methods
+ */
 public class CartServiceTest {
-         /**
-    * Here we mock our CartDAO and cartService
-    * in order to test their associated methods
-    */
+    /**
+     * Here we mock our CartDAO and cartService
+     * in order to test their associated methods
+     */
     @Mock
     private CartDAO cartDAO;
 
     private CartService cartService;
 
     /**
-    * setUp creates the environment for tests to be run
-    */
+     * setUp creates the environment for tests to be run
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         cartService = new CartService(cartDAO);
     }
+
     /**
-    * testCreateCartFromUserId tests the program's ability
-    * to make a cart when a new user is registered. This is important
-    * as having cart available in the program lets the user
-    * do things like checkout and view their cart contents.
-    */
+     * testCreateCartFromUserId tests the program's ability
+     * to make a cart when a new user is registered. This is important
+     * as having cart available in the program lets the user
+     * do things like checkout and view their cart contents.
+     */
     @Test
     public void testCreateCartFromUserId() {
         String userId = UUID.randomUUID().toString();
@@ -53,11 +55,12 @@ public class CartServiceTest {
         cartService.createCartFromUserId(userId);
         verify(cartDAO, times(1)).save(any(Cart.class));
     }
+
     /**
-    * testGetCartFromUserId tests the program's ability 
-    * to retrieve the cart of a user based off of their id
-    * this is needed when the user enters the cart screen for instance
-    */
+     * testGetCartFromUserId tests the program's ability
+     * to retrieve the cart of a user based off of their id
+     * this is needed when the user enters the cart screen for instance
+     */
     @Test
     public void testGetCartFromUserId() {
         User sampleUser = new User("test", "test");
@@ -67,10 +70,11 @@ public class CartServiceTest {
         Cart returnCart = cartService.getCartFromUserId(sampleUser.getId());
         assertEquals(returnCart.getUser().getId(), sampleUser.getId());
     }
+
     /**
-    * testAddProductToCart tests the ability of the program to 
-    * add a product to a cart.
-    */
+     * testAddProductToCart tests the ability of the program to
+     * add a product to a cart.
+     */
     @Test
     public void testAddProductToCart() {
         String cartId = UUID.randomUUID().toString();
@@ -81,10 +85,11 @@ public class CartServiceTest {
         cartService.addProductToCart(cartId, productId, quantity);
         verify(cartDAO, times(1)).addProductToCart(any(String.class), any(String.class), any(Integer.class));
     }
+
     /**
-    * testRemoveProductFromCart tests the ability of the program to
-    * remove a product from the cart.
-    */
+     * testRemoveProductFromCart tests the ability of the program to
+     * remove a product from the cart.
+     */
     @Test
     public void testRemoveProductFromCart() {
         String cartId = UUID.randomUUID().toString();
@@ -93,10 +98,11 @@ public class CartServiceTest {
         cartService.removeProductFromCart(cartId, productId);
         verify(cartDAO, times(1)).removeProductFromCart(any(String.class), any(String.class));
     }
+
     /**
-    * testUpdateQuantityOfProduct tests the ability of the program to
-    * change the number quantity of a product that is already in the cart.
-    */
+     * testUpdateQuantityOfProduct tests the ability of the program to
+     * change the number quantity of a product that is already in the cart.
+     */
     @Test
     public void testUpdateQuantityOfProduct() {
         String cartProductId = UUID.randomUUID().toString();

@@ -6,10 +6,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+
 /**
-* The ConnectionFactory class handles the connection between the app
-* and the postgresql database.
-*/
+ * The ConnectionFactory class handles the connection between the app
+ * and the postgresql database.
+ */
 public class ConnectionFactory {
     private static ConnectionFactory instance;
     private Connection connection;

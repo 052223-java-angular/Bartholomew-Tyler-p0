@@ -10,10 +10,12 @@ import org.apache.logging.log4j.Logger;
 import com.revature.app.utils.Session;
 import lombok.AllArgsConstructor;
 import com.revature.app.models.Product;
+
 /**
-* The BrowsingScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The BrowsingScreen class handles what information is presented to the user
+ * when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class BrowsingScreen implements IScreen {
     private RouterService routerService;

@@ -16,10 +16,12 @@ import javax.validation.Validator;
 import javax.validation.ConstraintViolation;
 import lombok.AllArgsConstructor;
 import com.revature.app.utils.Session;
+
 /**
-* The RegisterScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The RegisterScreen class handles what information is presented to the user
+ * when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class RegisterScreen implements IScreen {
     private final RouterService routerService;
@@ -28,14 +30,15 @@ public class RegisterScreen implements IScreen {
     private final Validator validator;
     private static final Logger logger = LogManager.getLogger(RegisterScreen.class);
     private Session session;
-    //Overrides default IScreen start method
+
+    // Overrides default IScreen start method
     @Override
     public void start(Scanner scan) {
         String username = "";
         String password = "";
 
         exit: {
-            //while loop to handle displaying information to the user
+            // while loop to handle displaying information to the user
             while (true) {
                 logger.info("Beginnning registration");
                 clearScreen();
@@ -62,17 +65,18 @@ public class RegisterScreen implements IScreen {
             }
         }
     }
-    //retrieves username from user input for registration
+
+    // retrieves username from user input for registration
     public String getUsername(Scanner scan) {
         String username = "";
         while (true) {
             System.out.print("\nEnter a username (x to go back): ");
             username = scan.nextLine();
-            //option to leave screen
+            // option to leave screen
             if (username.equalsIgnoreCase("x")) {
                 return "x";
             }
-            //Validation methods to check if the username meets certain criteria
+            // Validation methods to check if the username meets certain criteria
             Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User(username, ""),
                     "username");
 
@@ -83,7 +87,7 @@ public class RegisterScreen implements IScreen {
                 }
                 continue;
             }
-            //Checks to see if the username is already used in the database
+            // Checks to see if the username is already used in the database
             if (!userService.isUniqueUsername(username)) {
                 clearScreen();
                 System.out.println("Username is not unique!");
@@ -95,18 +99,19 @@ public class RegisterScreen implements IScreen {
 
         return username;
     }
-    //Retrieves password from user input
+
+    // Retrieves password from user input
     public String getPassword(Scanner scan) {
         String password = "";
         String confirmPassword = "";
         while (true) {
             System.out.print("\nEnter a password (x to go back): ");
             password = scan.nextLine();
-            //Option to exit
+            // Option to exit
             if (password.equalsIgnoreCase("x")) {
                 return "x";
             }
-            //Validator methods to make sure that password is acceptable
+            // Validator methods to make sure that password is acceptable
             Set<ConstraintViolation<User>> constraintViolations = validator.validateProperty(new User("", password),
                     "password");
 
@@ -117,14 +122,15 @@ public class RegisterScreen implements IScreen {
                 }
                 continue;
             }
-            //Have user type in password again for confirmation
+            // Have user type in password again for confirmation
             System.out.print("\nPlease confirm your password (x to go back): ");
             confirmPassword = scan.nextLine();
-            //option to exit 
+            // option to exit
             if (confirmPassword.equalsIgnoreCase("x")) {
                 return "x";
             }
-            //If the confirmed password does not match, the user is brought back to the beginning
+            // If the confirmed password does not match, the user is brought back to the
+            // beginning
             if (!password.equals(confirmPassword)) {
                 logger.warn("Not matching passwords!");
                 clearScreen();
@@ -136,7 +142,8 @@ public class RegisterScreen implements IScreen {
 
         return password;
     }
-    //method to clear the screen at beginning of while loop
+
+    // method to clear the screen at beginning of while loop
     private void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();

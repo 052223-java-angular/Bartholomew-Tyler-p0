@@ -10,10 +10,12 @@ import com.revature.app.services.OrderService;
 import com.revature.app.models.Order;
 import java.util.List;
 import com.revature.app.models.CartProduct;
+
 /**
-* The CheckoutScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The CheckoutScreen class handles what information is presented to the user
+ * when it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class CheckoutScreen implements IScreen {
     private final CartService cartService;

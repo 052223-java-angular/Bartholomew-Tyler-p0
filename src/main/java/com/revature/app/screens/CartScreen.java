@@ -14,10 +14,12 @@ import com.revature.app.utils.Session;
 import com.revature.app.utils.StringHelper;
 
 import lombok.AllArgsConstructor;
+
 /**
-* The CartScreen class handles what information is presented to the user when it 
-* is navigated to. It implements the IScreen interface.
-*/
+ * The CartScreen class handles what information is presented to the user when
+ * it
+ * is navigated to. It implements the IScreen interface.
+ */
 @AllArgsConstructor
 public class CartScreen implements IScreen {
     RouterService routerService;

@@ -26,26 +26,28 @@ import com.revature.app.models.Review;
  */
 public class ReviewServiceTest {
     /**
-    * Here we mock our UserDAO and UserService 
-    * in order to test their associated methods
-    */
+     * Here we mock our UserDAO and UserService
+     * in order to test their associated methods
+     */
     @Mock
     private ReviewDAO reviewDAO;
 
     private ReviewService reviewService;
+
     /**
      * setUp creates the environment for tests to be run
-    */
+     */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         reviewService = new ReviewService(reviewDAO);
     }
+
     /**
-    * testCreateReview tests the capability of reviewService's
-    * createReview method and it's ability to persist
-    */
+     * testCreateReview tests the capability of reviewService's
+     * createReview method and it's ability to persist
+     */
     @Test
     public void testCreateReview() {
         String userId = UUID.randomUUID().toString();
@@ -56,11 +58,12 @@ public class ReviewServiceTest {
         reviewService.createReview(userId, productId, rating, comment);
         verify(reviewDAO, times(1)).save(any(Review.class));
     }
+
     /**
      * testGetReviewByProductId tests the capibility of reviewService's
      * getReviewsByProductId method to retrieve the necessary reviews from the
      * database and return them.
-    */
+     */
     @Test
     public void testGetReviewsByProductId() {
         String productId = UUID.randomUUID().toString();
@@ -70,11 +73,12 @@ public class ReviewServiceTest {
         List<Review> returnReviews = reviewService.getReviewsByProductId(productId);
         assertEquals(sampleReviews, returnReviews);
     }
+
     /**
-    * testGetByUserIdAndProductId tests the capibility of reviewService's method
-    * getByUserIdAndProductId to retrieve a review based off of it's User and
-    * Product ids.
-    */
+     * testGetByUserIdAndProductId tests the capibility of reviewService's method
+     * getByUserIdAndProductId to retrieve a review based off of it's User and
+     * Product ids.
+     */
     @Test
     public void testGetByUserIdAndProductId() {
         String userId = UUID.randomUUID().toString();
