@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
+//Unimplemented
 public class PaymentMethod {
     private String id;
     private String number;

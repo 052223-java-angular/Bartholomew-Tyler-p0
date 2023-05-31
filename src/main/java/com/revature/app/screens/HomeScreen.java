@@ -9,7 +9,10 @@ import com.revature.app.services.RouterService;
 import com.revature.app.utils.Session;
 
 import lombok.AllArgsConstructor;
-
+/**
+* The HomeScreen class handles what information is presented to the user when it 
+* is navigated to. It implements the IScreen interface.
+*/
 @AllArgsConstructor
 public class HomeScreen implements IScreen {
     private final RouterService router;

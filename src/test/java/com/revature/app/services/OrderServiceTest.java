@@ -16,14 +16,22 @@ import java.util.ArrayList;
 import com.revature.app.models.Cart;
 import com.revature.app.models.User;
 import com.revature.app.models.Product;
-
+    /**
+     * This is the OrderServiceTest class, it contains
+     * the methods necessary to test OrderService methods
+    */
 public class OrderServiceTest {
-
+     /**
+    * Here we mock our OrderDAO and orderService
+    * in order to test their associated methods
+    */
     @Mock
     private OrderDAO orderDao;
 
     private OrderService orderService;
-
+    /**
+    * setUp creates the environment for tests to be run
+    */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -31,7 +39,10 @@ public class OrderServiceTest {
         orderService = new OrderService(orderDao);
     }
 
-    // Test to get all of the orders that a user had in the past
+    /**
+    * testGetUsersOrders allows us to test the ability of the app to 
+    * retrieve a list of all of the orders that an individual made in the past
+    */
     @Test
     public void testGetUsersOrders() {
         ArrayList<Order> orders = new ArrayList<>();
@@ -49,7 +60,11 @@ public class OrderServiceTest {
         }
     }
 
-    // Test to make sure the OrderProducts are created
+    /**
+    * testCreatingOrderProducts tests the ability of the app to make OrderProducts, this is 
+    * important because OrderProducts are made via transcribing the data from products in the
+    * cart before attaching them to a newly made Order.
+    */
     @Test
     public void testCreatingOrderProducts() {
         User u1 = new User("1", "testUser", "testPassword");
@@ -69,7 +84,10 @@ public class OrderServiceTest {
         verify(orderDao, times(1)).addOrderProducts("1", p1.getId(), cpr1.getQuantity());
         verify(orderDao, times(1)).addOrderProducts("1", p2.getId(), cpr2.getQuantity());
     }
-
+    /**
+    * testCreatingAnOrder checks the ability of the app to make new Orders based off 
+    * of the contents of the cart object.
+    */
     @Test
     public void testCreatingAnOrder() {
         User u1 = new User("1", "testUser", "testPassword");

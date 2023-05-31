@@ -10,7 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+    /**
+    * The User class acts as a model for a user.
+    *@param id  Acts as the primary key and identifier
+    *@param username The user's username
+    *@param password The user's password
+    */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
