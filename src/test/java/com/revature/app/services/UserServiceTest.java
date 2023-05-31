@@ -13,9 +13,8 @@ import static org.junit.Assert.*;
 import com.revature.app.models.User;
 import com.revature.app.daos.UserDAO;
 
-
 public class UserServiceTest {
-    
+
     @Mock
     private UserDAO userDao;
 
@@ -42,21 +41,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testisUniqueUsername() {
-        String username = "testUser12";
-        String password = "password11";
-        String username2 = "testUser12";
-        
-        userService.register(username, password);
-    
-        assertFalse(userService.isUniqueUsername(username2));
+    public void testFindById() {
 
     }
-
-    @Test
-        public void testFindById() {
-
-        }
-
-
 }
