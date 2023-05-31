@@ -12,24 +12,28 @@ import com.revature.app.utils.StringHelper;
 import com.revature.app.models.Product;
 
 import lombok.AllArgsConstructor;
-
+/**
+* The ProductSearchScreen class handles what information is presented to the user when it 
+* is navigated to. It implements the IScreen interface.
+*/
 @AllArgsConstructor
 public class ProductSearchScreen implements IScreen {
     private static final Logger logger = LogManager.getLogger(ProductSearchScreen.class);
     private final RouterService routerService;
     private final ProductService productService;
     private Session session;
-
+     //Overrides default IScreen start method
     @Override
     public void start(Scanner scan) {
         String message = "";
         String input = "";
 
         exit: {
+            //while loop to handle displaying information to the user
             while (true) {
                 clearScreen();
                 System.out.println("Product Search (press x to go back at any time)");
-
+                //option to leave screen
                 if (!message.isBlank()) {
                     System.out.println(message);
                 }
@@ -41,7 +45,8 @@ public class ProductSearchScreen implements IScreen {
 
                 System.out.print("\nEnter: ");
                 input = scan.nextLine();
-
+                //checks in place to lead user to their requested search function, also will check if input
+                //is valid and gives them an option to leave
                 switch (input.toLowerCase()) {
                     case "1":
                         logger.info("Search products by name");
@@ -69,11 +74,11 @@ public class ProductSearchScreen implements IScreen {
             }
         }
     }
-
+    //Method for the user to search for a product by it's name
     public void searchProductsByName(Scanner scan, Session session) {
         String searchString = "";
         String message = "";
-
+        //new menu for the user to search by Product name
         while (true) {
             clearScreen();
 
@@ -102,13 +107,13 @@ public class ProductSearchScreen implements IScreen {
             chooseProduct(scan, products, session);
         }
     }
-
+    //option for the user to search for product by category
     public void searchProductsByCategory(Scanner scan, Session session) {
         String message = "";
         String input = "";
 
         List<String> categories = productService.findAllProductCategories();
-
+        // new menu for the user to search by category
         while (true) {
             clearScreen();
 
@@ -154,13 +159,14 @@ public class ProductSearchScreen implements IScreen {
             chooseProduct(scan, products, session);
         }
     }
-
+    //option for the user to search for product by a certain range of prices
     public void searchProductsByPriceRange(Scanner scan, Session session) {
         String message = "";
         String lowerLimit = "";
         String upperLimit = "";
 
         exit: {
+            // a new price range menu for the user to input their range
             while (true) {
                 clearScreen();
 
@@ -219,7 +225,7 @@ public class ProductSearchScreen implements IScreen {
             }
         }
     }
-
+    // Method to check the inputted prices 
     private String getPriceString(Scanner scan) {
         String input = "";
 
@@ -254,7 +260,7 @@ public class ProductSearchScreen implements IScreen {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
-
+    //metho to price the products to the screen
     private void printProducts(List<Product> products) {
         System.out.println("\nResults:");
         System.out.printf("%5s %40s %15s %10s\n", "", "Name", "Category", "Price");
@@ -266,7 +272,7 @@ public class ProductSearchScreen implements IScreen {
                     "$" + product.getPrice());
         }
     }
-
+    //method to choose the product
     private String chooseProduct(Scanner scan, List<Product> products, Session session) {
         String input = "";
         while (true) {

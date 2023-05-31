@@ -15,7 +15,10 @@ import com.revature.app.utils.StringHelper;
 import com.revature.app.models.Cart;
 import com.revature.app.models.CartProduct;
 import com.revature.app.models.Product;
-
+/**
+* The ProductScreen class handles what information is presented to the user when it 
+* is navigated to. It implements the IScreen interface.
+*/
 @AllArgsConstructor
 public class ProductScreen implements IScreen {
     private final RouterService routerService;

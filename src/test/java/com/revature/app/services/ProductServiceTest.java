@@ -11,21 +11,31 @@ import java.math.BigDecimal;
 import com.revature.app.models.Product;
 import com.revature.app.daos.ProductDAO;
 import java.util.ArrayList;
-
+    /**
+     * This is the ProductServiceTest class, it contains
+     * the methods necessary to test ProductService methods
+    */
 public class ProductServiceTest {
+     /**
+    * Here we mock our ProductDAO and ProductService 
+    * in order to test their associated methods
+    */
     @Mock
     private ProductDAO productDAO;
     private ProductService productService;
-
+    /**
+    * setUp creates the environment for tests to be run
+    */
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        // productDAO = new ProductDAO();
-        // productService = new ProductService(mockProductDAO);
-        // mockProductDAO = Mockito.mock(ProductDAO.class);
         productService = new ProductService(productDAO);
     }
-    // Tests the ability to return a list of products to display
+    
+    /**
+     * testGetAllProducts tests the ability to return a list of products to display
+    */
+
     @Test
     public void testGetAllProducts() {
         ArrayList<Product> products = new ArrayList<>();
@@ -42,7 +52,11 @@ public class ProductServiceTest {
             assertTrue(returnedProducts.contains(p2));
         }
     }
-    //Test if a product can be found by name
+    
+    /**
+    * testGetProductsByName tests the ability of the app to retrieve
+    * a list of products based off of the name of the products
+    */
     @Test
     public void testGetProductsByName() {
         ArrayList<Product> products = new ArrayList<>();
@@ -56,7 +70,11 @@ public class ProductServiceTest {
             assertTrue(returnedProducts.contains(p1));
         }
     }
-
+    /**
+    * testGetProductsByCategory tests the ability of the app to 
+    * retrieve a list that contains all of the products that 
+    * share the same category.
+    */
     @Test
     public void testGetProductsByCategory() {
         ArrayList<Product> products = new ArrayList<>();
@@ -70,7 +88,11 @@ public class ProductServiceTest {
             assertTrue(returnedProducts.contains(p1));
         }
     }
-
+    /**
+    * testGetAllProductCategories tests the ability of the app to
+    * return a list that contains all of the categories in the product
+    * list.
+    */
     @Test 
     public void testGetAllProductCategories() {
         ArrayList<String> categories = new ArrayList<>();
@@ -87,7 +109,10 @@ public class ProductServiceTest {
             assertTrue(returnedCategories.contains(category2));
         }
     }
-
+    /**
+     * testGetProductById tests the app's ability to comb through the database
+     * to find the product that matches the given product id
+    */
     @Test
     public void testGetProductById() {
         Product p1 = new Product("1", "grapes", "fruit", BigDecimal.valueOf(28.00), "a fruit");
@@ -96,7 +121,11 @@ public class ProductServiceTest {
         Product product = productService.findProductById("1");
         assertTrue(product.equals(p1));
     }
-
+    /**
+     * testPriceRange tests the ability of the program to take two BigDecimal values and return all 
+     * of the products whose price lies inbetween those values through the findProductsByPriceRange
+     * productService method.
+    */
     @Test
     public void testPriceRange() {
         ArrayList<Product> products = new ArrayList<>();

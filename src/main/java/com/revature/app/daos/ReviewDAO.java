@@ -14,7 +14,10 @@ import com.revature.app.models.Review;
 import com.revature.app.utils.ConnectionFactory;
 
 public class ReviewDAO implements CrudDAO<Review> {
-
+    /**
+    * The ReviewDAO class handles setting up the sql querys related to CRUD actions
+    * involving he Review model. It implements the CrudDAO interface.
+    */
     @Override
     public void save(Review review) {
         String sql = "INSERT INTO reviews(id, rating, comment, user_id, product_id) VALUES (?, ?, ?, ?, ?)";

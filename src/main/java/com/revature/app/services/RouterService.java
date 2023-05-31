@@ -29,11 +29,19 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import com.revature.app.utils.Session;
-
+/**
+* The RouterService class handles the pathing for all of the screens that the app uses
+*/
 @AllArgsConstructor
 public class RouterService {
     private Session session;
-
+    /**
+    * navigate handles all of the necessary pathing in the app, passing along
+    * the scanner for inputs and the paths to point to the screen that the 
+    * user is attempting to access. Different navigation paths take in 
+    * different parameters to ensure that they have the needed variables 
+    * and objects for the actions taken in those screens.
+    */
     public void navigate(String path, Scanner scanner) {
         switch (path) {
             case "/cart":
@@ -100,7 +108,10 @@ public class RouterService {
                 break;
         }
     }
-
+    /**
+    * All of our services and instantiated here to be passed into the above navigation
+    * screens. The validatior is also created here to be passed into the registration screen. 
+    */
     private UserService getUserService() {
         return new UserService(new UserDAO());
     }

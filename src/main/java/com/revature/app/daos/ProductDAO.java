@@ -10,7 +10,10 @@ import java.util.List;
 
 import com.revature.app.models.Product;
 import com.revature.app.utils.ConnectionFactory;
-
+    /**
+    * The ProductDAO class handles setting up the sql querys related to CRUD actions
+    * involving the Product  model. It implements the CrudDAO interface.
+    */
 public class ProductDAO implements CrudDAO<Product> {
     @Override
     public void save(Product product) {
