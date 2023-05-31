@@ -91,6 +91,18 @@ public class UserServiceTest {
         assertTrue(returnedUser.equals(Optional.of(user)));
     }
 
+    @Test
+    public void testLoginFailureBadPassword() {
+        String id = "1";
+        String username = "joker11";
+        String password = "batman11";
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        User user = new User(id, username, hashed);
+        when(userService.login(username, hashed)).thenReturn(Optional.of(user));
+        Optional<User> returnedUser = userService.login("joker11", "batman12");
+        assertTrue(returnedUser.equals(Optional.empty()));
+    }
+
     /**
      * testGetUserId makes sure that the userService method
      * findbyId is capable of returning a User object that
