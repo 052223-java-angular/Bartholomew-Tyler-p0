@@ -50,7 +50,7 @@ public class CartDAO implements CrudDAO<Cart> {
     }
 
     /**
-     * Updates a Cart from the data source.
+     * Updates a Cart to the data source.
      *
      * @param cart the Cart to be updated
      */
